@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JobTrack</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <div class="popup-container">
+    <!-- Header -->
+    <header class="header">
+      <div class="brand">
+        <div class="brand-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">JobTrack</span>
+          <span class="brand-subtitle">Smart Extractor</span>
+        </div>
+      </div>
+      <div id="user-badge" class="user-badge hidden">
+        <span class="status-dot"></span>
+        <span id="user-name" class="user-name">User</span>
+      </div>
+    </header>
+
+    <!-- Unauthenticated State -->
+    <div id="auth-section" class="section auth-section hidden">
+      <div class="auth-card">
+        <div class="auth-icon-wrap">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+            <polyline points="10 17 15 12 10 7"></polyline>
+            <line x1="15" y1="12" x2="3" y2="12"></line>
+          </svg>
+        </div>
+        <h3>Connect to JobTrack</h3>
+        <p class="text-muted">Please log in or paste your JWT session token from JobTrack Settings.</p>
+        
+        <form id="login-form" class="auth-form">
+          <div class="form-group">
+            <label for="login-email">Email</label>
+            <input type="email" id="login-email" placeholder="you@example.com" required />
+          </div>
+          <div class="form-group">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <label for="login-password">Password</label>
+              <a href="http://localhost:5173/forgot-password" target="_blank" style="font-size: 11px; color: #818cf8; text-decoration: none;">Forgot?</a>
+            </div>
+            <input type="password" id="login-password" placeholder="••••••••" required />
+          </div>
+          <button type="submit" id="btn-login" class="btn btn-primary w-full">
+            Log In & Connect
+          </button>
+        </form>
+
+        <div class="auth-divider"><span>OR QUICK TOKEN</span></div>
+        <div class="token-input-group">
+          <input type="text" id="manual-token" placeholder="Paste JWT token here..." />
+          <button type="button" id="btn-save-token" class="btn btn-secondary">Save</button>
+        </div>
+
+        <div id="auth-error" class="error-banner hidden"></div>
+      </div>
+    </div>
+
+    <!-- Authenticated / Extraction State -->
+    <div id="capture-section" class="section capture-section">
+      <div id="extraction-status" class="extraction-status">
+        <span class="source-tag" id="preview-source">LinkedIn</span>
+        <button id="btn-re-extract" class="btn-icon" title="Re-scan page">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="23 4 23 10 17 10"></polyline>
+            <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+          </svg>
+        </button>
+      </div>
+
+      <form id="application-form" class="application-form">
+        <div class="form-group">
+          <label for="app-job-title">Job Title</label>
+          <input type="text" id="app-job-title" placeholder="e.g. Software Engineer" required />
+        </div>
+
+        <div class="form-row">
+          <div class="form-group flex-1">
+            <label for="app-company-name">Company</label>
+            <input type="text" id="app-company-name" placeholder="e.g. Google" required />
+          </div>
+          <div class="form-group flex-1">
+            <label for="app-location">Location</label>
+            <input type="text" id="app-location" placeholder="e.g. Remote / NYC" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group flex-1">
+            <label for="app-status">Status</label>
+            <select id="app-status">
+              <option value="Applied" selected>Applied</option>
+              <option value="Saved">Saved / Wishlist</option>
+              <option value="Assessment">Assessment</option>
+              <option value="Interview">Interview</option>
+              <option value="Offer">Offer</option>
+            </select>
+          </div>
+          <div class="form-group flex-1">
+            <label for="app-salary">Salary (Optional)</label>
+            <input type="text" id="app-salary" placeholder="e.g. $140k - $160k" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="app-resume">Resume Used</label>
+          <select id="app-resume">
+            <option value="">-- No Resume Linked --</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="app-notes">Personal Notes</label>
+          <input type="text" id="app-notes" placeholder="Referral notes, recruiter name, etc." />
+        </div>
+
+        <!-- Hidden extracted fields -->
+        <input type="hidden" id="app-job-url" />
+        <input type="hidden" id="app-job-description" />
+        <input type="hidden" id="app-job-type" value="Full-time" />
+
+        <div id="action-message" class="action-message hidden"></div>
+
+        <div class="actions">
+          <button type="submit" id="btn-track" class="btn btn-primary btn-track">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            Track Application
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Success View -->
+    <div id="success-section" class="section success-section hidden">
+      <div class="success-card">
+        <div class="success-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+          </svg>
+        </div>
+        <h3>Application Saved!</h3>
+        <p class="text-muted" id="success-desc">Software Engineer at Google added to your JobTrack dashboard.</p>
+        <div class="success-actions">
+          <button id="btn-view-app" class="btn btn-primary w-full">Open in JobTrack</button>
+          <button id="btn-track-another" class="btn btn-secondary w-full">Track Another</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <a href="http://localhost:5173/dashboard" target="_blank" class="footer-link">
+        Open Web Dashboard &rarr;
+      </a>
+      <button id="btn-logout" class="btn-text">Log out</button>
+    </footer>
+  </div>
+
+  <script src="../utils/api.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

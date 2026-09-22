@@ -1,0 +1,21 @@
+const express = require('express');
+const router = express.Router();
+const {
+  getReminders,
+  createReminder,
+  updateReminder,
+  deleteReminder
+} = require('../controllers/reminderController');
+const { protect } = require('../middleware/auth');
+
+router.use(protect);
+
+router.route('/')
+  .get(getReminders)
+  .post(createReminder);
+
+router.route('/:id')
+  .patch(updateReminder)
+  .delete(deleteReminder);
+
+module.exports = router;

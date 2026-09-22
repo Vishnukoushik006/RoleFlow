@@ -1,0 +1,17 @@
+{
+  "name": "jobtrack-root",
+  "version": "1.0.0",
+  "private": true,
+  "description": "JobTrack — Job Application & Career Pipeline Ecosystem",
+  "scripts": {
+    "start": "npm --prefix server start",
+    "dev:server": "npm --prefix server dev",
+    "dev:client": "npm --prefix client dev",
+    "build": "npm --prefix client run build",
+    "test": "npm --prefix server test",
+    "seed": "npm --prefix server run seed",
+    "seed:reset": "npm --prefix server run seed:reset",
+    "docker:up": "docker compose up --build",
+    "docker:down": "docker compose down"
+  }
+}

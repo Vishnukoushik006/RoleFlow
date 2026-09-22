@@ -1,0 +1,63 @@
+{
+  "manifest_version": 3,
+  "name": "JobTrack — Smart Job Application Tracker",
+  "version": "1.0.0",
+  "description": "One-click 1-second job application capture from LinkedIn, Indeed, Naukri, Greenhouse, Lever, and company career pages.",
+  "permissions": [
+    "activeTab",
+    "storage",
+    "scripting"
+  ],
+  "host_permissions": [
+    "http://localhost/*",
+    "http://localhost:*/*",
+    "http://127.0.0.1/*",
+    "http://127.0.0.1:*/*",
+    "*://*/*"
+  ],
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_title": "JobTrack - Capture Job Application",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "background": {
+    "service_worker": "background/service_worker.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "http://localhost/*",
+        "http://localhost:*/*",
+        "http://127.0.0.1/*",
+        "http://127.0.0.1:*/*",
+        "*://*.linkedin.com/*",
+        "*://*.indeed.com/*",
+        "*://*.naukri.com/*",
+        "*://*.greenhouse.io/*",
+        "*://*.lever.co/*",
+        "*://*/*"
+      ],
+      "js": [
+        "parsers/generic.js",
+        "parsers/linkedin.js",
+        "parsers/indeed.js",
+        "parsers/naukri.js",
+        "parsers/greenhouse.js",
+        "parsers/lever.js",
+        "content/content_script.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}

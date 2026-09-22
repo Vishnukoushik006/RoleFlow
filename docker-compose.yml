@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: jobtrack-app
+    restart: unless-stopped
+    ports:
+      - "5001:5001"
+    environment:
+      - NODE_ENV=production
+      - PORT=5001
+      - MONGODB_URI=mongodb://mongo:27017/jobtrack
+      - JWT_SECRET=jobtrack_jwt_secret_production_random_key_2026
+      - JWT_EXPIRE=30d
+      - CLIENT_URL=http://localhost:5001
+    depends_on:
+      - mongo
+    networks:
+      - jobtrack-network
+
+  mongo:
+    image: mongo:7-jammy
+    container_name: jobtrack-mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - jobtrack-network
+
+networks:
+  jobtrack-network:
+    driver: bridge
+
+volumes:
+  mongo-data:
+    driver: local
