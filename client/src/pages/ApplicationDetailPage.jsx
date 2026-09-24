@@ -403,7 +403,7 @@ export const ApplicationDetailPage = ({ id, onNavigate }) => {
           gap: 6px;
           background: transparent;
           border: none;
-          color: #94a3b8;
+          color: var(--text-secondary);
           font-size: 13px;
           font-weight: 600;
           cursor: pointer;
@@ -412,7 +412,7 @@ export const ApplicationDetailPage = ({ id, onNavigate }) => {
           transition: color 0.15s ease;
         }
         .back-link:hover {
-          color: #f8fafc;
+          color: var(--text-main);
         }
         .detail-header-card {
           display: flex;
@@ -431,14 +431,14 @@ export const ApplicationDetailPage = ({ id, onNavigate }) => {
           height: 56px;
           border-radius: 12px;
           object-fit: cover;
-          background: #fff;
-          border: 1px solid rgba(255, 255, 255, 0.1);
+          background: var(--bg-card);
+          border: 1px solid var(--border-hover);
         }
         .detail-logo-placeholder {
           width: 56px;
           height: 56px;
           border-radius: 12px;
-          background: rgba(255, 255, 255, 0.05);
+          background: var(--border);
           color: #c8956c;
           font-size: 22px;
           font-weight: 700;
@@ -460,7 +460,7 @@ export const ApplicationDetailPage = ({ id, onNavigate }) => {
         .detail-job-title {
           font-size: 22px;
           font-weight: 800;
-          color: #f8fafc;
+          color: var(--text-main);
           letter-spacing: -0.02em;
         }
         .company-subtitle-row {
@@ -471,7 +471,7 @@ export const ApplicationDetailPage = ({ id, onNavigate }) => {
         }
         .detail-company-name {
           font-size: 15px;
-          color: #cbd5e1;
+          color: var(--text-secondary);
           font-weight: 600;
         }
         .meta-pill {
@@ -479,8 +479,8 @@ export const ApplicationDetailPage = ({ id, onNavigate }) => {
           align-items: center;
           gap: 4px;
           font-size: 12px;
-          color: #94a3b8;
-          background: rgba(255, 255, 255, 0.05);
+          color: var(--text-secondary);
+          background: var(--border);
           padding: 2px 8px;
           border-radius: 4px;
         }
@@ -497,7 +497,7 @@ export const ApplicationDetailPage = ({ id, onNavigate }) => {
         }
         .status-sel-label {
           font-size: 12px;
-          color: #94a3b8;
+          color: var(--text-secondary);
           font-weight: 600;
         }
         .select-status-quick {
@@ -517,12 +517,12 @@ export const ApplicationDetailPage = ({ id, onNavigate }) => {
         }
         .job-description-content {
           font-size: 13px;
-          color: #cbd5e1;
+          color: var(--text-secondary);
           line-height: 1.6;
           white-space: pre-wrap;
           max-height: 400px;
           overflow-y: auto;
-          background: rgba(255, 255, 255, 0.02);
+          background: var(--bg-surface);
           border-radius: 8px;
           padding: 14px;
         }
@@ -536,16 +536,16 @@ export const ApplicationDetailPage = ({ id, onNavigate }) => {
           align-items: center;
           justify-content: space-between;
           padding-bottom: 8px;
-          border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+          border-bottom: 1px solid var(--border);
         }
         .meta-label {
           font-size: 12.5px;
-          color: #94a3b8;
+          color: var(--text-secondary);
         }
         .meta-val {
           font-size: 12.5px;
           font-weight: 600;
-          color: #f8fafc;
+          color: var(--text-main);
         }
         .resume-linked-val {
           display: flex;
@@ -565,16 +565,16 @@ export const ApplicationDetailPage = ({ id, onNavigate }) => {
         .detail-notes-box {
           margin-top: 14px;
           padding: 10px 12px;
-          background: rgba(255, 255, 255, 0.03);
+          background: var(--bg-surface);
           border-radius: 6px;
           font-size: 12.5px;
-          color: #cbd5e1;
+          color: var(--text-secondary);
         }
         .notes-label {
           display: block;
           font-size: 11px;
           font-weight: 700;
-          color: #94a3b8;
+          color: var(--text-secondary);
           text-transform: uppercase;
           margin-bottom: 2px;
         }
@@ -585,8 +585,8 @@ export const ApplicationDetailPage = ({ id, onNavigate }) => {
         }
         .interview-mini-item, .reminder-mini-item {
           padding: 10px;
-          background: rgba(255, 255, 255, 0.02);
-          border: 1px solid rgba(255, 255, 255, 0.04);
+          background: var(--bg-surface);
+          border: 1px solid var(--border);
           border-radius: 6px;
         }
         .interview-mini-header {
@@ -594,7 +594,7 @@ export const ApplicationDetailPage = ({ id, onNavigate }) => {
           justify-content: space-between;
           font-size: 12.5px;
         }
-        .interview-mini-round { font-weight: 700; color: #f8fafc; }
+        .interview-mini-round { font-weight: 700; color: var(--text-main); }
         .interview-mini-date { color: #f59e0b; font-size: 11.5px; }
         .interview-meet-link {
           display: inline-block;
@@ -602,7 +602,7 @@ export const ApplicationDetailPage = ({ id, onNavigate }) => {
           font-size: 11.5px;
           color: #c8956c;
         }
-        .reminder-mini-title { font-size: 12.5px; font-weight: 600; color: #f8fafc; display: block; }
+        .reminder-mini-title { font-size: 12.5px; font-weight: 600; color: var(--text-main); display: block; }
         .reminder-mini-date { font-size: 11px; color: #06b6d4; }
 
         @media (max-width: 900px) {

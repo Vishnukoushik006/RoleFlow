@@ -89,8 +89,8 @@ export const KanbanCard = ({ application, onSelect, onMoveStatus, onOpenAI }) =>
 
       <style>{`
         .kanban-card {
-          background: #161616;
-          border: 1px solid rgba(255, 255, 255, 0.08);
+          background: var(--bg-card);
+          border: 1px solid var(--border);
           border-radius: 10px;
           padding: 14px;
           cursor: grab;
@@ -101,7 +101,7 @@ export const KanbanCard = ({ application, onSelect, onMoveStatus, onOpenAI }) =>
           user-select: none;
         }
         .kanban-card:hover {
-          border-color: rgba(255, 255, 255, 0.14);
+          border-color: var(--border-hover);
           transform: translateY(-1px);
           box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
         }
@@ -118,13 +118,13 @@ export const KanbanCard = ({ application, onSelect, onMoveStatus, onOpenAI }) =>
           height: 32px;
           border-radius: 6px;
           object-fit: cover;
-          background: #fff;
+          background: var(--bg-card);
         }
         .kanban-logo-placeholder {
           width: 32px;
           height: 32px;
           border-radius: 6px;
-          background: rgba(255, 255, 255, 0.05);
+          background: var(--border);
           color: #c8956c;
           font-weight: 700;
           font-size: 13px;
@@ -139,13 +139,13 @@ export const KanbanCard = ({ application, onSelect, onMoveStatus, onOpenAI }) =>
         }
         .kanban-company-name {
           font-size: 12px;
-          color: #8a8480;
+          color: var(--text-secondary);
           font-weight: 500;
         }
         .kanban-job-title {
           font-size: 13.5px;
           font-weight: 600;
-          color: #edebe6;
+          color: var(--text-main);
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
@@ -161,8 +161,8 @@ export const KanbanCard = ({ application, onSelect, onMoveStatus, onOpenAI }) =>
           align-items: center;
           gap: 3px;
           font-size: 11px;
-          color: #8a8480;
-          background: rgba(255, 255, 255, 0.04);
+          color: var(--text-secondary);
+          background: var(--border);
           padding: 2px 6px;
           border-radius: 4px;
         }
@@ -175,7 +175,7 @@ export const KanbanCard = ({ application, onSelect, onMoveStatus, onOpenAI }) =>
           align-items: center;
           justify-content: space-between;
           padding-top: 6px;
-          border-top: 1px solid rgba(255, 255, 255, 0.04);
+          border-top: 1px solid var(--border);
         }
         .kanban-move-controls {
           display: flex;
@@ -183,9 +183,9 @@ export const KanbanCard = ({ application, onSelect, onMoveStatus, onOpenAI }) =>
           gap: 4px;
         }
         .btn-move-arrow {
-          background: #1e1e1e;
-          border: 1px solid rgba(255, 255, 255, 0.08);
-          color: #8a8480;
+          background: var(--bg-surface);
+          border: 1px solid var(--border);
+          color: var(--text-secondary);
           cursor: pointer;
           padding: 4px 6px;
           border-radius: 4px;
@@ -194,7 +194,7 @@ export const KanbanCard = ({ application, onSelect, onMoveStatus, onOpenAI }) =>
           transition: all 0.15s ease;
         }
         .btn-move-arrow:hover {
-          color: #0f0f0f;
+          color: var(--bg-app);
           background: #c8956c;
           border-color: #c8956c;
         }

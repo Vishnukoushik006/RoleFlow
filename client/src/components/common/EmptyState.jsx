@@ -28,8 +28,8 @@ export const EmptyState = ({
           justify-content: center;
           text-align: center;
           padding: 48px 24px;
-          background: rgba(255, 255, 255, 0.02);
-          border: 1px dashed rgba(255, 255, 255, 0.1);
+          background: var(--bg-surface);
+          border: 1px dashed var(--border-hover);
           border-radius: 12px;
           margin: 16px 0;
         }
@@ -47,12 +47,12 @@ export const EmptyState = ({
         .empty-state-title {
           font-size: 15px;
           font-weight: 600;
-          color: #edebe6;
+          color: var(--text-main);
           margin-bottom: 6px;
         }
         .empty-state-desc {
           font-size: 13px;
-          color: #8a8480;
+          color: var(--text-secondary);
           max-width: 380px;
           margin-bottom: 16px;
         }
@@ -76,14 +76,14 @@ export const Loader = ({ size = 32, message }) => {
           gap: 12px;
         }
         .spinner {
-          border: 3px solid rgba(255, 255, 255, 0.08);
+          border: 3px solid var(--border);
           border-top-color: #c8956c;
           border-radius: 50%;
           animation: spin 0.8s linear infinite;
         }
         .loader-message {
           font-size: 13px;
-          color: #8a8480;
+          color: var(--text-secondary);
         }
         @keyframes spin {
           to { transform: rotate(360deg); }

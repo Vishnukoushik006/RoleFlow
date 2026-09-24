@@ -314,7 +314,7 @@ export const AIAssistantModal = ({ isOpen, onClose, application }) => {
         .ai-tabs {
           display: flex;
           gap: 8px;
-          border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+          border-bottom: 1px solid var(--border);
           padding-bottom: 12px;
         }
         .ai-tab {
@@ -325,19 +325,19 @@ export const AIAssistantModal = ({ isOpen, onClose, application }) => {
           background: transparent;
           border: 1px solid transparent;
           border-radius: 8px;
-          color: #94a3b8;
+          color: var(--text-secondary);
           font-size: 13px;
           font-weight: 600;
           cursor: pointer;
           transition: all 0.15s ease;
         }
         .ai-tab:hover {
-          color: #f8fafc;
-          background: rgba(255, 255, 255, 0.04);
+          color: var(--text-main);
+          background: var(--border);
         }
         .ai-tab.active {
-          color: #edebe6;
-          background: #1e1e1e;
+          color: var(--text-main);
+          background: var(--bg-surface);
           border-color: rgba(200, 149, 108, 0.35);
         }
         .match-select-row {
@@ -345,8 +345,8 @@ export const AIAssistantModal = ({ isOpen, onClose, application }) => {
           gap: 10px;
         }
         .match-results-card {
-          background: #161616;
-          border: 1px solid rgba(255, 255, 255, 0.08);
+          background: var(--bg-card);
+          border: 1px solid var(--border);
           border-radius: 10px;
           padding: 20px;
           display: flex;
@@ -377,7 +377,7 @@ export const AIAssistantModal = ({ isOpen, onClose, application }) => {
         }
         .score-label {
           font-size: 9px;
-          color: #8a8480;
+          color: var(--text-secondary);
           text-transform: uppercase;
         }
         .skills-breakdown-grid {
@@ -386,8 +386,8 @@ export const AIAssistantModal = ({ isOpen, onClose, application }) => {
           gap: 16px;
         }
         .skills-col {
-          background: #1e1e1e;
-          border: 1px solid rgba(255, 255, 255, 0.06);
+          background: var(--bg-surface);
+          border: 1px solid var(--border);
           border-radius: 8px;
           padding: 14px;
         }
@@ -444,7 +444,7 @@ export const AIAssistantModal = ({ isOpen, onClose, application }) => {
         .ai-recommendations ul, .resp-list {
           padding-left: 18px;
           font-size: 12.5px;
-          color: #edebe6;
+          color: var(--text-main);
           line-height: 1.5;
         }
         .ai-empty-prompt, .ai-action-banner {
@@ -455,11 +455,11 @@ export const AIAssistantModal = ({ isOpen, onClose, application }) => {
           padding: 36px 20px;
           text-align: center;
           gap: 12px;
-          background: rgba(255, 255, 255, 0.02);
+          background: var(--bg-surface);
           border-radius: 10px;
-          border: 1px dashed rgba(255, 255, 255, 0.08);
+          border: 1px dashed var(--border);
           font-size: 13px;
-          color: #8a8480;
+          color: var(--text-secondary);
         }
         .parsed-grid {
           display: grid;
@@ -468,17 +468,17 @@ export const AIAssistantModal = ({ isOpen, onClose, application }) => {
           margin-bottom: 16px;
         }
         .parsed-card {
-          background: #1e1e1e;
-          border: 1px solid rgba(255, 255, 255, 0.06);
+          background: var(--bg-surface);
+          border: 1px solid var(--border);
           border-radius: 8px;
           padding: 12px;
         }
         .parsed-card.full-width { grid-column: span 2; }
-        .parsed-label { font-size: 11px; color: #8a8480; text-transform: uppercase; font-weight: 600; display: block; margin-bottom: 4px; }
-        .parsed-value { font-size: 13px; color: #edebe6; font-weight: 500; }
+        .parsed-label { font-size: 11px; color: var(--text-secondary); text-transform: uppercase; font-weight: 600; display: block; margin-bottom: 4px; }
+        .parsed-value { font-size: 13px; color: var(--text-main); font-weight: 500; }
         .parsed-section, .summary-card {
-          background: #1e1e1e;
-          border: 1px solid rgba(255, 255, 255, 0.06);
+          background: var(--bg-surface);
+          border: 1px solid var(--border);
           border-radius: 8px;
           padding: 14px;
           margin-bottom: 12px;
@@ -486,12 +486,12 @@ export const AIAssistantModal = ({ isOpen, onClose, application }) => {
         .parsed-section h5, .summary-card h5 {
           font-size: 13px;
           font-weight: 600;
-          color: #edebe6;
+          color: var(--text-main);
           margin-bottom: 8px;
         }
         .summary-text {
           font-size: 13px;
-          color: #8a8480;
+          color: var(--text-secondary);
           line-height: 1.5;
         }
       `}</style>

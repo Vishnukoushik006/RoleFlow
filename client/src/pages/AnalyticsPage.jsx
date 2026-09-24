@@ -230,7 +230,7 @@ export const AnalyticsPage = () => {
           width: 100%;
           max-width: 44px;
           height: 130px;
-          background: rgba(255, 255, 255, 0.03);
+          background: var(--bg-surface);
           border-radius: 6px;
           display: flex;
           align-items: flex-end;
@@ -244,7 +244,7 @@ export const AnalyticsPage = () => {
         }
         .cadence-week-label {
           font-size: 11px;
-          color: #94a3b8;
+          color: var(--text-secondary);
         }
 
         /* Status Bars */
@@ -263,11 +263,11 @@ export const AnalyticsPage = () => {
           justify-content: space-between;
           font-size: 12px;
         }
-        .status-bar-name { font-weight: 600; color: #cbd5e1; }
-        .status-bar-val { color: #94a3b8; font-family: var(--font-mono); }
+        .status-bar-name { font-weight: 600; color: var(--text-secondary); }
+        .status-bar-val { color: var(--text-secondary); font-family: var(--font-mono); }
         .status-bar-track {
           height: 6px;
-          background: rgba(255, 255, 255, 0.05);
+          background: var(--border);
           border-radius: 3px;
           overflow: hidden;
         }
@@ -298,13 +298,13 @@ export const AnalyticsPage = () => {
         }
         .source-name {
           width: 120px;
-          color: #cbd5e1;
+          color: var(--text-secondary);
           font-weight: 500;
         }
         .source-bar-wrap {
           flex: 1;
           height: 8px;
-          background: rgba(255, 255, 255, 0.04);
+          background: var(--border);
           border-radius: 4px;
           overflow: hidden;
         }
@@ -317,7 +317,7 @@ export const AnalyticsPage = () => {
           width: 30px;
           text-align: right;
           font-weight: 700;
-          color: #f8fafc;
+          color: var(--text-main);
         }
 
         /* Location list */
@@ -331,7 +331,7 @@ export const AnalyticsPage = () => {
           align-items: center;
           gap: 10px;
           padding: 8px 12px;
-          background: rgba(255, 255, 255, 0.02);
+          background: var(--bg-surface);
           border-radius: 6px;
           font-size: 12.5px;
         }
@@ -339,16 +339,16 @@ export const AnalyticsPage = () => {
           width: 20px;
           height: 20px;
           border-radius: 50%;
-          background: rgba(255, 255, 255, 0.06);
-          color: #edebe6;
+          background: var(--border);
+          color: var(--text-main);
           font-weight: 700;
           font-size: 11px;
           display: flex;
           align-items: center;
           justify-content: center;
         }
-        .loc-name { flex: 1; color: #f8fafc; font-weight: 600; }
-        .loc-count { color: #94a3b8; }
+        .loc-name { flex: 1; color: var(--text-main); font-weight: 600; }
+        .loc-count { color: var(--text-secondary); }
 
         @media (max-width: 860px) {
           .analytics-grid {

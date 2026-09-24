@@ -1,5 +1,5 @@
 /**
- * JobTrack Extension Popup Controller
+ * RoleFlow Extension Popup Controller
  */
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -200,7 +200,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (isOk) {
         extractJobFromActiveTab();
       } else {
-        authError.textContent = 'Invalid token. Please check JobTrack settings.';
+        authError.textContent = 'Invalid token. Please check RoleFlow settings.';
         authError.classList.remove('hidden');
       }
     });
@@ -239,7 +239,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (res && res.success) {
         currentCreatedAppId = res.data._id;
         document.getElementById('success-desc').textContent = 
-          `${jobTitle} at ${companyName} tracked successfully in JobTrack.`;
+          `${jobTitle} at ${companyName} tracked successfully in RoleFlow.`;
         
         captureSection.classList.add('hidden');
         successSection.classList.remove('hidden');

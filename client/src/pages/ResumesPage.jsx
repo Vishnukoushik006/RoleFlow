@@ -12,12 +12,14 @@ import {
   CheckCircle,
   Star,
   Briefcase,
-  ExternalLink
+  ExternalLink,
+  RefreshCw
 } from 'lucide-react';
 
 export const ResumesPage = () => {
   const toast = useToast();
   const [loading, setLoading] = useState(true);
+  const [reparsingId, setReparsingId] = useState(null);
   const [resumes, setResumes] = useState([]);
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
 
@@ -45,6 +47,21 @@ export const ResumesPage = () => {
       fetchResumes();
     } catch (err) {
       toast.error('Failed to set default');
+    }
+  };
+
+  const handleReparse = async (id) => {
+    setReparsingId(id);
+    try {
+      const res = await resumeService.reparse(id);
+      if (res.success) {
+        toast.success(`Extracted ${res.data?.parsedSkills?.length || 0} skills successfully!`);
+        fetchResumes();
+      }
+    } catch (err) {
+      toast.error('Failed to re-parse resume');
+    } finally {
+      setReparsingId(null);
     }
   };
 
@@ -85,6 +102,7 @@ export const ResumesPage = () => {
               day: 'numeric',
               year: 'numeric'
             });
+            const isReparsing = reparsingId === resume._id;
 
             return (
               <div key={resume._id} className="card resume-card">
@@ -121,19 +139,31 @@ export const ResumesPage = () => {
                   </div>
                 </div>
 
-                {resume.parsedSkills && resume.parsedSkills.length > 0 && (
-                  <div className="resume-skills-section">
-                    <span className="skills-section-label">Identified Skills ({resume.parsedSkills.length}):</span>
+                <div className="resume-skills-section">
+                  <div className="skills-section-header">
+                    <span className="skills-section-label">
+                      Identified Skills ({resume.parsedSkills?.length || 0}):
+                    </span>
+                    <button
+                      className="btn-text-reparse"
+                      onClick={() => handleReparse(resume._id)}
+                      disabled={isReparsing}
+                      title="Re-extract skills from file"
+                    >
+                      <RefreshCw size={11} className={isReparsing ? 'spin-icon' : ''} />
+                      <span>{isReparsing ? 'Scanning...' : 'Re-scan'}</span>
+                    </button>
+                  </div>
+                  {resume.parsedSkills && resume.parsedSkills.length > 0 ? (
                     <div className="skills-pills-wrap">
-                      {resume.parsedSkills.slice(0, 10).map((skill) => (
+                      {resume.parsedSkills.map((skill) => (
                         <span key={skill} className="skill-pill">{skill}</span>
                       ))}
-                      {resume.parsedSkills.length > 10 && (
-                        <span className="skill-pill-more">+{resume.parsedSkills.length - 10} more</span>
-                      )}
                     </div>
-                  </div>
-                )}
+                  ) : (
+                    <p className="no-skills-note">No technical skills detected yet. Click "Re-scan" to extract.</p>
+                  )}
+                </div>
 
                 <div className="resume-card-actions">
                   <a
@@ -145,6 +175,14 @@ export const ResumesPage = () => {
                     <ExternalLink size={13} />
                     <span>View File</span>
                   </a>
+                  <button
+                    className="btn btn-secondary btn-sm"
+                    onClick={() => handleReparse(resume._id)}
+                    disabled={isReparsing}
+                    title="Re-scan skills"
+                  >
+                    <RefreshCw size={13} className={isReparsing ? 'spin-icon' : ''} />
+                  </button>
                   <button
                     className="btn btn-danger btn-sm"
                     onClick={() => handleDelete(resume._id)}
@@ -217,14 +255,14 @@ export const ResumesPage = () => {
         .resume-name {
           font-size: 14.5px;
           font-weight: 600;
-          color: #edebe6;
+          color: var(--text-main);
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
         }
         .resume-date {
           font-size: 11.5px;
-          color: #8a8480;
+          color: var(--text-secondary);
         }
         .default-pill {
           display: inline-flex;
@@ -240,26 +278,26 @@ export const ResumesPage = () => {
         }
         .btn-set-default {
           background: transparent;
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          color: #94a3b8;
+          border: 1px solid var(--border-hover);
+          color: var(--text-secondary);
           padding: 3px 8px;
           border-radius: 4px;
           font-size: 11px;
           cursor: pointer;
         }
         .btn-set-default:hover {
-          color: #fff;
-          background: rgba(255, 255, 255, 0.06);
+          color: var(--text-main);
+          background: var(--border);
         }
         .resume-stats-row {
           display: flex;
           align-items: center;
           justify-content: space-between;
           padding: 10px 12px;
-          background: rgba(255, 255, 255, 0.02);
+          background: var(--bg-surface);
           border-radius: 8px;
           font-size: 12px;
-          color: #cbd5e1;
+          color: var(--text-secondary);
         }
         .stat-item {
           display: flex;
@@ -269,37 +307,72 @@ export const ResumesPage = () => {
         .resume-skills-section {
           display: flex;
           flex-direction: column;
-          gap: 6px;
+          gap: 8px;
+        }
+        .skills-section-header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
         }
         .skills-section-label {
           font-size: 11px;
           font-weight: 700;
-          color: #64748b;
+          color: var(--text-secondary);
           text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+        .btn-text-reparse {
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+          background: transparent;
+          border: none;
+          color: #c8956c;
+          font-size: 11px;
+          font-weight: 600;
+          cursor: pointer;
+          padding: 2px 4px;
+        }
+        .btn-text-reparse:hover:not(:disabled) {
+          text-decoration: underline;
+        }
+        .btn-text-reparse:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+        }
+        .spin-icon {
+          animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
         }
         .skills-pills-wrap {
           display: flex;
           flex-wrap: wrap;
-          gap: 4px;
+          gap: 5px;
         }
         .skill-pill {
-          padding: 2px 7px;
-          background: rgba(99, 102, 241, 0.1);
-          color: #a5b4fc;
+          padding: 3px 8px;
+          background: rgba(200, 149, 108, 0.12);
+          color: #e6c5a8;
+          border: 1px solid rgba(200, 149, 108, 0.25);
           border-radius: 4px;
           font-size: 11px;
+          font-weight: 500;
         }
-        .skill-pill-more {
-          padding: 2px 6px;
-          color: #64748b;
-          font-size: 11px;
+        .no-skills-note {
+          font-size: 11.5px;
+          color: #78716c;
+          font-style: italic;
+          margin: 0;
         }
         .resume-card-actions {
           display: flex;
           gap: 8px;
           margin-top: auto;
           padding-top: 10px;
-          border-top: 1px solid rgba(255, 255, 255, 0.06);
+          border-top: 1px solid var(--border);
         }
       `}</style>
     </div>

@@ -87,8 +87,8 @@ export const KanbanColumn = ({
           flex: 1;
           min-width: 280px;
           max-width: 340px;
-          background: #141414;
-          border: 1px solid rgba(255, 255, 255, 0.06);
+          background: var(--bg-app);
+          border: 1px solid var(--border);
           border-radius: 10px;
           display: flex;
           flex-direction: column;
@@ -104,7 +104,7 @@ export const KanbanColumn = ({
           align-items: center;
           justify-content: space-between;
           padding: 16px;
-          border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+          border-bottom: 1px solid var(--border);
         }
         .column-title-wrap {
           display: flex;
@@ -119,15 +119,15 @@ export const KanbanColumn = ({
         .column-title {
           font-size: 14px;
           font-weight: 700;
-          color: #f8fafc;
+          color: var(--text-main);
         }
         .column-count {
           padding: 1px 7px;
-          background: rgba(255, 255, 255, 0.08);
+          background: var(--border);
           border-radius: 10px;
           font-size: 11px;
           font-weight: 700;
-          color: #94a3b8;
+          color: var(--text-secondary);
         }
         .btn-col-add {
           background: transparent;
@@ -140,8 +140,8 @@ export const KanbanColumn = ({
           align-items: center;
         }
         .btn-col-add:hover {
-          color: #fff;
-          background: rgba(255, 255, 255, 0.08);
+          color: var(--text-main);
+          background: var(--border);
         }
         .column-cards-container {
           padding: 12px;
@@ -153,7 +153,7 @@ export const KanbanColumn = ({
         }
         .column-empty-placeholder {
           height: 90px;
-          border: 1px dashed rgba(255, 255, 255, 0.08);
+          border: 1px dashed var(--border);
           border-radius: 8px;
           display: flex;
           align-items: center;

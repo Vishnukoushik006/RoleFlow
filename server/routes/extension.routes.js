@@ -1,6 +1,6 @@
 const express = require('express');
 const path = require('path');
-const { ZipArchive } = require('archiver');
+const archiver = require('archiver');
 const fs = require('fs');
 
 const router = express.Router();
@@ -26,7 +26,7 @@ router.get('/download', (req, res) => {
   res.setHeader('Content-Disposition', 'attachment; filename="jobtrack-extension.zip"');
 
   // Create a zip archive and pipe it to the response
-  const archive = new ZipArchive({ zlib: { level: 9 } });
+  const archive = archiver('zip', { zlib: { level: 9 } });
 
   archive.on('error', (err) => {
     console.error('[Extension Download] Archive error:', err);

@@ -67,7 +67,7 @@ export const ToastProvider = ({ children }) => {
           background: #1c1c1c;
           border: 1px solid rgba(255, 255, 255, 0.08);
           border-radius: 8px;
-          color: #edebe6;
+          color: #E2E8F0;
           box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
           animation: slideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
         }

@@ -4,6 +4,8 @@ const {
   getResumes,
   uploadResume,
   getResumeById,
+  reparseResume,
+  updateResume,
   deleteResume,
   setDefaultResume
 } = require('../controllers/resumeController');
@@ -18,7 +20,11 @@ router.route('/')
 
 router.route('/:id')
   .get(getResumeById)
+  .patch(updateResume)
   .delete(deleteResume);
+
+router.route('/:id/reparse')
+  .post(reparseResume);
 
 router.route('/:id/default')
   .patch(setDefaultResume);

@@ -240,7 +240,7 @@ export const DashboardPage = ({
           height: 5px;
           border-radius: 10px;
           overflow: hidden;
-          background: #1a1a1a;
+          background: var(--bg-surface);
           gap: 2px;
         }
         .funnel-segment {
@@ -268,10 +268,10 @@ export const DashboardPage = ({
           border-radius: 50%;
           opacity: 0.7;
         }
-        .legend-name { color: #5a5552; }
+        .legend-name { color: var(--text-muted); }
         .legend-count {
           font-weight: 600;
-          color: #c8c6c2;
+          color: var(--text-main);
         }
 
         .dashboard-grid {
@@ -294,7 +294,7 @@ export const DashboardPage = ({
           transition: background 0.12s ease;
         }
         .recent-app-item:hover {
-          background: rgba(255, 255, 255, 0.03);
+          background: var(--bg-surface);
         }
         .recent-app-left {
           display: flex;
@@ -307,16 +307,16 @@ export const DashboardPage = ({
           height: 30px;
           border-radius: 6px;
           object-fit: cover;
-          background: #fff;
+          background: var(--bg-card);
           flex-shrink: 0;
         }
         .app-logo-placeholder {
           width: 30px;
           height: 30px;
           border-radius: 6px;
-          background: #1e1e1e;
+          background: var(--bg-surface);
           border: 1px solid rgba(255,255,255,0.07);
-          color: #5a5552;
+          color: var(--text-muted);
           font-weight: 600;
           display: flex;
           align-items: center;
@@ -332,14 +332,14 @@ export const DashboardPage = ({
         .app-title-text {
           font-size: 13px;
           font-weight: 500;
-          color: #d0cdc8;
+          color: var(--text-main);
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
         }
         .app-company-text {
           font-size: 11.5px;
-          color: #4a4846;
+          color: var(--text-muted);
         }
         .quick-actions-col {
           display: flex;
@@ -351,11 +351,11 @@ export const DashboardPage = ({
           align-items: center;
           gap: 10px;
           padding: 10px 12px;
-          background: rgba(255, 255, 255, 0.02);
+          background: var(--bg-surface);
           border: 1px solid rgba(255,255,255,0.05);
           border-radius: 7px;
           font-size: 12.5px;
-          color: #8a8480;
+          color: var(--text-secondary);
           font-weight: 500;
         }
         @media (max-width: 960px) {

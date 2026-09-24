@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "JobTrack — Smart Job Application Tracker",
+  "name": "RoleFlow — Smart Job Application Tracker",
   "version": "1.0.0",
   "description": "One-click 1-second job application capture from LinkedIn, Indeed, Naukri, Greenhouse, Lever, and company career pages.",
   "permissions": [
@@ -17,7 +17,7 @@
   ],
   "action": {
     "default_popup": "popup/popup.html",
-    "default_title": "JobTrack - Capture Job Application",
+    "default_title": "RoleFlow - Capture Job Application",
     "default_icon": {
       "16": "icons/icon16.png",
       "32": "icons/icon32.png",
@@ -52,6 +52,20 @@
         "content/content_script.js"
       ],
       "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "parsers/generic.js",
+        "parsers/linkedin.js",
+        "parsers/indeed.js",
+        "parsers/naukri.js",
+        "parsers/greenhouse.js",
+        "parsers/lever.js",
+        "content/content_script.js"
+      ],
+      "matches": ["<all_urls>"]
     }
   ],
   "icons": {

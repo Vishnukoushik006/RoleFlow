@@ -13,9 +13,9 @@ services:
       - NODE_ENV=production
       - PORT=5001
       - MONGODB_URI=mongodb://mongo:27017/jobtrack
-      - JWT_SECRET=jobtrack_jwt_secret_production_random_key_2026
-      - JWT_EXPIRE=30d
-      - CLIENT_URL=http://localhost:5001
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_EXPIRE=${JWT_EXPIRE:-30d}
+      - CLIENT_URL=${CLIENT_URL:-http://localhost:5001}
     depends_on:
       - mongo
     networks:

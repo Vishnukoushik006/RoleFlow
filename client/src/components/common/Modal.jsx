@@ -40,7 +40,7 @@ export const Modal = ({ isOpen, onClose, title, children, maxWidth = '600px' }) 
           left: 0;
           right: 0;
           bottom: 0;
-          background: rgba(9, 13, 22, 0.75);
+          background: rgba(0,0,0,0.5);
           backdrop-filter: blur(4px);
           display: flex;
           align-items: center;
@@ -51,8 +51,8 @@ export const Modal = ({ isOpen, onClose, title, children, maxWidth = '600px' }) 
         }
         .modal-content {
           width: 100%;
-          background: #161616;
-          border: 1px solid rgba(255, 255, 255, 0.08);
+          background: var(--bg-card);
+          border: 1px solid var(--border);
           border-radius: 12px;
           box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
           display: flex;
@@ -66,25 +66,25 @@ export const Modal = ({ isOpen, onClose, title, children, maxWidth = '600px' }) 
           align-items: center;
           justify-content: space-between;
           padding: 16px 20px;
-          border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+          border-bottom: 1px solid var(--border);
         }
         .modal-title {
           font-size: 15px;
           font-weight: 600;
-          color: #edebe6;
+          color: var(--text-main);
         }
         .modal-close-btn {
           background: transparent;
           border: none;
-          color: #94a3b8;
+          color: var(--text-secondary);
           cursor: pointer;
           display: flex;
           padding: 4px;
           border-radius: 6px;
         }
         .modal-close-btn:hover {
-          color: #fff;
-          background: rgba(255, 255, 255, 0.08);
+          color: var(--text-main);
+          background: var(--border);
         }
         .modal-body {
           padding: 24px;

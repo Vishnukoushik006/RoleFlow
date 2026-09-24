@@ -1,6 +1,74 @@
 const { extractSkillsFromText } = require('./resumeParser');
 
 /**
+ * Common skill alias groups for accurate fuzzy & semantic matching
+ */
+const SKILL_ALIAS_GROUPS = [
+  ['java', 'core java', 'java se', 'java ee', 'j2ee'],
+  ['javascript', 'js', 'ecmascript', 'es6', 'es6+'],
+  ['typescript', 'ts'],
+  ['python', 'python3', 'py'],
+  ['react', 'react.js', 'reactjs'],
+  ['react native', 'react-native'],
+  ['next.js', 'nextjs', 'next'],
+  ['vue.js', 'vue', 'vuejs'],
+  ['angular', 'angularjs'],
+  ['node.js', 'nodejs', 'node'],
+  ['express', 'express.js', 'expressjs'],
+  ['spring boot', 'springboot', 'spring framework', 'spring mvc', 'spring'],
+  ['hibernate', 'jpa'],
+  ['postgresql', 'postgres', 'psql'],
+  ['mongodb', 'mongo'],
+  ['mysql', 'my sql'],
+  ['sql', 'relational database', 'rdbms'],
+  ['redis', 'in-memory cache'],
+  ['rest api', 'rest apis', 'restful', 'restful api', 'restful apis', 'rest'],
+  ['graphql'],
+  ['docker', 'containerization'],
+  ['kubernetes', 'k8s'],
+  ['aws', 'amazon web services'],
+  ['gcp', 'google cloud', 'google cloud platform'],
+  ['azure', 'microsoft azure'],
+  ['git', 'github', 'gitlab', 'version control'],
+  ['scikit-learn', 'sklearn', 'scikit learn'],
+  ['machine learning', 'ml', 'statistical modeling'],
+  ['deep learning', 'dl', 'neural networks'],
+  ['data structures & algorithms', 'data structures and algorithms', 'data structures', 'algorithms', 'dsa'],
+  ['mern stack', 'mern'],
+  ['tailwind', 'tailwindcss'],
+  ['html', 'html5'],
+  ['css', 'css3', 'sass', 'scss'],
+  ['c++', 'cpp'],
+  ['c#', 'csharp', 'c-sharp'],
+  ['golang', 'go', 'go language']
+];
+
+/**
+ * Helper to check if two skill names match or are aliases
+ */
+const areSkillsEquivalent = (skillA, skillB) => {
+  if (!skillA || !skillB) return false;
+  const a = skillA.toLowerCase().trim();
+  const b = skillB.toLowerCase().trim();
+
+  if (a === b) return true;
+
+  // Check alias groups
+  for (const group of SKILL_ALIAS_GROUPS) {
+    const hasA = group.some(item => a === item || a.includes(item) || item.includes(a));
+    const hasB = group.some(item => b === item || b.includes(item) || item.includes(b));
+    if (hasA && hasB) return true;
+  }
+
+  // Check substring containment if long enough
+  if (a.length >= 4 && b.length >= 4 && (a.includes(b) || b.includes(a))) {
+    return true;
+  }
+
+  return false;
+};
+
+/**
  * Intelligent Fallback Heuristic JD Parser
  */
 const parseJobDescriptionFallback = (jdText) => {
@@ -72,7 +140,7 @@ const parseJobDescriptionFallback = (jdText) => {
   return {
     skills,
     programmingLanguages: skills.filter(s => ['JavaScript', 'TypeScript', 'Python', 'Java', 'C++', 'C#', 'Go', 'Rust', 'Ruby', 'PHP', 'Swift', 'Kotlin', 'SQL'].includes(s)),
-    frameworks: skills.filter(s => ['React', 'Next.js', 'Vue', 'Angular', 'Node.js', 'Express', 'Django', 'FastAPI', 'Spring Boot', 'TailwindCSS'].includes(s)),
+    frameworks: skills.filter(s => ['React', 'Next.js', 'Vue.js', 'Angular', 'Node.js', 'Express', 'Django', 'FastAPI', 'Spring Boot', 'TailwindCSS'].includes(s)),
     experienceRequirements: experience,
     educationRequirements: education,
     workplaceType,
@@ -101,35 +169,48 @@ const summarizeJobDescriptionFallback = (jdText) => {
  * Resume to Job Matching Analysis
  */
 const matchResumeWithJob = async (resumeSkills = [], resumeText = '', jdSkills = [], jdText = '') => {
-  const combinedJDSkills = jdSkills.length > 0 ? jdSkills : extractSkillsFromText(jdText);
-  const combinedResumeSkills = resumeSkills.length > 0 ? resumeSkills : extractSkillsFromText(resumeText);
+  const extractedFromJD = jdText ? extractSkillsFromText(jdText) : [];
+  const combinedJDSkills = Array.from(new Set([...(jdSkills || []), ...extractedFromJD]));
+
+  const extractedFromResume = resumeText ? extractSkillsFromText(resumeText) : [];
+  const combinedResumeSkills = Array.from(new Set([...(resumeSkills || []), ...extractedFromResume]));
 
   const matchedSkills = [];
   const missingSkills = [];
 
-  const resumeSkillsLower = new Set(combinedResumeSkills.map(s => s.toLowerCase()));
-  const resumeTextLower = resumeText.toLowerCase();
+  const resumeTextLower = (resumeText || '').toLowerCase();
 
-  combinedJDSkills.forEach(skill => {
+  // If no specific skills were parsed for JD, default to generic CS stack comparison
+  const targetJDSkills = combinedJDSkills.length > 0 ? combinedJDSkills : ['Java', 'SQL', 'Data Structures & Algorithms', 'REST API', 'Git'];
+
+  targetJDSkills.forEach(skill => {
     const sLower = skill.toLowerCase();
-    if (resumeSkillsLower.has(sLower) || resumeTextLower.includes(sLower)) {
+    
+    // 1. Direct or alias match with resumeSkills
+    const hasSkillMatch = combinedResumeSkills.some(rSkill => areSkillsEquivalent(skill, rSkill));
+
+    // 2. Direct presence in resumeText
+    const escaped = skill.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
+    const inText = new RegExp(`(^|[^a-zA-Z0-9#+])${escaped}([^a-zA-Z0-9#+]|$)`, 'i').test(resumeTextLower);
+
+    if (hasSkillMatch || inText) {
       matchedSkills.push(skill);
     } else {
       missingSkills.push(skill);
     }
   });
 
-  const totalRequired = combinedJDSkills.length || 1;
+  const totalRequired = targetJDSkills.length || 1;
   const matchPercentage = Math.min(100, Math.round((matchedSkills.length / totalRequired) * 100));
 
-  // Extract keywords
-  const jdWords = jdText.toLowerCase().match(/\b[a-z]{4,}\b/g) || [];
+  // Extract top keywords from JD
+  const jdWords = (jdText || '').toLowerCase().match(/\b[a-z]{4,}\b/g) || [];
   const freqMap = {};
   jdWords.forEach(w => { freqMap[w] = (freqMap[w] || 0) + 1; });
   const topKeywords = Object.entries(freqMap)
-    .filter(([word]) => !['with', 'that', 'this', 'from', 'have', 'will', 'your', 'about', 'team', 'work'].includes(word))
+    .filter(([word]) => !['with', 'that', 'this', 'from', 'have', 'will', 'your', 'about', 'team', 'work', 'experience', 'looking', 'build'].includes(word))
     .sort((a, b) => b[1] - a[1])
-    .slice(0, 15)
+    .slice(0, 12)
     .map(([word]) => word);
 
   const keywordsFound = topKeywords.filter(k => resumeTextLower.includes(k));
@@ -139,15 +220,17 @@ const matchResumeWithJob = async (resumeSkills = [], resumeText = '', jdSkills =
     matchPercentage,
     matchingSkills: Array.from(new Set(matchedSkills)),
     missingSkills: Array.from(new Set(missingSkills)),
-    totalJobSkills: combinedJDSkills.length,
+    totalJobSkills: targetJDSkills.length,
     keywordsFound,
     keywordsNotFound,
     recommendations: [
       missingSkills.length > 0 
-        ? `Consider highlighting hands-on projects or coursework involving: ${missingSkills.slice(0, 3).join(', ')}.`
-        : 'Strong alignment with listed requirements.',
-      `Incorporate top keywords like "${keywordsNotFound.slice(0, 3).join('", "') || 'domain concepts'}" into your bullet points.`,
-      'Quantify your accomplishments (e.g. % performance increase, latency reduced, users impacted).'
+        ? `Consider highlighting hands-on projects, coursework, or certifications in: ${missingSkills.slice(0, 3).join(', ')}.`
+        : 'Strong alignment with the core technical requirements for this role.',
+      keywordsNotFound.length > 0
+        ? `Incorporate domain keywords like "${keywordsNotFound.slice(0, 3).join('", "')}" into your project descriptions.`
+        : 'Resume contains great domain keyword density.',
+      'Quantify your accomplishments (e.g., % latency reduction, query optimization, user base scaled).'
     ]
   };
 };
@@ -156,7 +239,6 @@ const matchResumeWithJob = async (resumeSkills = [], resumeText = '', jdSkills =
  * Main AI Service Entry points
  */
 const parseJobDescription = async (jdText) => {
-  // If GEMINI_API_KEY is configured in env, we can invoke Google Gemini
   if (process.env.GEMINI_API_KEY) {
     try {
       const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`, {

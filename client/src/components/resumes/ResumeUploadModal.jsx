@@ -127,9 +127,9 @@ export const ResumeUploadModal = ({ isOpen, onClose, onUploaded }) => {
 
       <style>{`
         .file-drop-zone {
-          border: 1px dashed rgba(255, 255, 255, 0.15);
+          border: 1px dashed var(--border-hover);
           border-radius: 8px;
-          background: rgba(255, 255, 255, 0.02);
+          background: var(--bg-surface);
           padding: 20px;
           text-align: center;
           cursor: pointer;
@@ -151,11 +151,11 @@ export const ResumeUploadModal = ({ isOpen, onClose, onUploaded }) => {
         .drop-main {
           font-size: 13px;
           font-weight: 600;
-          color: #f8fafc;
+          color: var(--text-main);
         }
         .drop-sub {
           font-size: 11px;
-          color: #94a3b8;
+          color: var(--text-secondary);
         }
         .file-chosen-name {
           font-size: 13px;
@@ -170,7 +170,7 @@ export const ResumeUploadModal = ({ isOpen, onClose, onUploaded }) => {
           align-items: center;
           gap: 8px;
           font-size: 13px;
-          color: #94a3b8;
+          color: var(--text-secondary);
           cursor: pointer;
         }
         .modal-actions {

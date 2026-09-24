@@ -55,11 +55,11 @@ export const SourceBadge = ({ source }) => {
           display: inline-flex;
           align-items: center;
           padding: 2px 7px;
-          background: rgba(255, 255, 255, 0.06);
-          border: 1px solid rgba(255, 255, 255, 0.08);
+          background: var(--border);
+          border: 1px solid var(--border);
           border-radius: 4px;
           font-size: 11px;
-          color: #94a3b8;
+          color: var(--text-secondary);
           font-weight: 500;
         }
       `}</style>

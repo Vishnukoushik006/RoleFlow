@@ -42,7 +42,7 @@ export const Timeline = ({ events = [], onDeleteEvent }) => {
       case 'Recruiter Contacted':
         return <Mail size={16} color="#a855f7" />;
       default:
-        return <FileText size={16} color="#94a3b8" />;
+        return <FileText size={16} color="var(--text-secondary)" />;
     }
   };
 
@@ -98,9 +98,9 @@ export const Timeline = ({ events = [], onDeleteEvent }) => {
           align-items: center;
           gap: 10px;
           padding: 24px;
-          background: rgba(255, 255, 255, 0.02);
+          background: var(--bg-surface);
           border-radius: 10px;
-          color: #94a3b8;
+          color: var(--text-secondary);
           font-size: 13px;
         }
         .timeline-list {
@@ -124,7 +124,7 @@ export const Timeline = ({ events = [], onDeleteEvent }) => {
           height: 32px;
           border-radius: 50%;
           background: #1e293b;
-          border: 2px solid rgba(255, 255, 255, 0.12);
+          border: 2px solid var(--border-hover);
           display: flex;
           align-items: center;
           justify-content: center;
@@ -133,20 +133,20 @@ export const Timeline = ({ events = [], onDeleteEvent }) => {
         .timeline-line {
           width: 2px;
           flex: 1;
-          background: rgba(255, 255, 255, 0.1);
+          background: var(--border-hover);
           margin: 4px 0;
         }
         .timeline-content-card {
           flex: 1;
-          background: rgba(255, 255, 255, 0.03);
-          border: 1px solid rgba(255, 255, 255, 0.06);
+          background: var(--bg-surface);
+          border: 1px solid var(--border);
           border-radius: 10px;
           padding: 12px 16px;
           margin-bottom: 16px;
           transition: border-color 0.15s ease;
         }
         .timeline-content-card:hover {
-          border-color: rgba(255, 255, 255, 0.14);
+          border-color: var(--border-hover);
         }
         .timeline-card-header {
           display: flex;
@@ -162,7 +162,7 @@ export const Timeline = ({ events = [], onDeleteEvent }) => {
         .timeline-event-type {
           font-size: 13px;
           font-weight: 700;
-          color: #f8fafc;
+          color: var(--text-main);
         }
         .timeline-date {
           font-size: 11.5px;
@@ -171,7 +171,7 @@ export const Timeline = ({ events = [], onDeleteEvent }) => {
         }
         .timeline-desc {
           font-size: 13px;
-          color: #cbd5e1;
+          color: var(--text-secondary);
           line-height: 1.45;
         }
         .btn-delete-event {

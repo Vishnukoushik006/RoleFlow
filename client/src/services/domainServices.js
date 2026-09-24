@@ -35,6 +35,8 @@ export const resumeService = {
   getAll: () => api.get('/resumes'),
   getById: (id) => api.get(`/resumes/${id}`),
   upload: (formData) => api.post('/resumes', formData),
+  reparse: (id) => api.post(`/resumes/${id}/reparse`),
+  update: (id, data) => api.patch(`/resumes/${id}`, data),
   delete: (id) => api.delete(`/resumes/${id}`),
   setDefault: (id) => api.patch(`/resumes/${id}/default`)
 };

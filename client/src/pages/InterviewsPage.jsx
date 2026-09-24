@@ -154,7 +154,7 @@ export const InterviewsPage = ({ onNavigate }) => {
                   </div>
                   {iv.interviewer && (
                     <div className="iv-detail-row">
-                      <User size={14} color="#8a8480" />
+                      <User size={14} color="var(--text-secondary)" />
                       <span>{iv.interviewer}</span>
                     </div>
                   )}
@@ -252,22 +252,22 @@ export const InterviewsPage = ({ onNavigate }) => {
         }
         .tab-btn {
           padding: 8px 16px;
-          background: #161616;
-          border: 1px solid rgba(255, 255, 255, 0.08);
+          background: var(--bg-card);
+          border: 1px solid var(--border);
           border-radius: 8px;
-          color: #8a8480;
+          color: var(--text-secondary);
           font-size: 13px;
           font-weight: 500;
           cursor: pointer;
           transition: all 0.15s ease;
         }
         .tab-btn:hover {
-          color: #edebe6;
-          background: rgba(255, 255, 255, 0.05);
+          color: var(--text-main);
+          background: var(--border);
         }
         .tab-btn.active {
-          color: #edebe6;
-          background: #1e1e1e;
+          color: var(--text-main);
+          background: var(--bg-surface);
           border-color: rgba(200, 149, 108, 0.35);
         }
         .interviews-grid {
@@ -299,7 +299,7 @@ export const InterviewsPage = ({ onNavigate }) => {
         .iv-round-title {
           font-size: 15px;
           font-weight: 600;
-          color: #edebe6;
+          color: var(--text-main);
           margin-top: 2px;
         }
         .status-toggle-btn {
@@ -324,7 +324,7 @@ export const InterviewsPage = ({ onNavigate }) => {
           display: flex;
           flex-direction: column;
           gap: 6px;
-          background: rgba(255, 255, 255, 0.02);
+          background: var(--bg-surface);
           padding: 10px 12px;
           border-radius: 8px;
         }
@@ -333,7 +333,7 @@ export const InterviewsPage = ({ onNavigate }) => {
           align-items: center;
           gap: 8px;
           font-size: 12.5px;
-          color: #cbd5e1;
+          color: var(--text-secondary);
         }
         .iv-topics-wrap {
           display: flex;
@@ -360,10 +360,10 @@ export const InterviewsPage = ({ onNavigate }) => {
         }
         .iv-notes-box {
           padding: 10px;
-          background: rgba(255, 255, 255, 0.03);
+          background: var(--bg-surface);
           border-radius: 6px;
           font-size: 12px;
-          color: #94a3b8;
+          color: var(--text-secondary);
         }
         .iv-card-footer {
           display: flex;
@@ -371,7 +371,7 @@ export const InterviewsPage = ({ onNavigate }) => {
           justify-content: space-between;
           margin-top: auto;
           padding-top: 10px;
-          border-top: 1px solid rgba(255, 255, 255, 0.06);
+          border-top: 1px solid var(--border);
         }
         .iv-actions {
           display: flex;

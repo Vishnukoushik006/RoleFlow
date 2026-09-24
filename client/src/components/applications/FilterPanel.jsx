@@ -79,8 +79,8 @@ export const FilterPanel = ({ filters, onFilterChange, onReset }) => {
           gap: 12px;
           flex-wrap: wrap;
           padding: 12px 16px;
-          background: #161616;
-          border: 1px solid rgba(255, 255, 255, 0.08);
+          background: var(--bg-card);
+          border: 1px solid var(--border);
           border-radius: 10px;
           margin-bottom: 16px;
         }
@@ -92,7 +92,7 @@ export const FilterPanel = ({ filters, onFilterChange, onReset }) => {
         .filter-label {
           font-size: 11.5px;
           font-weight: 700;
-          color: #94a3b8;
+          color: var(--text-secondary);
           text-transform: uppercase;
         }
         .select-sm {

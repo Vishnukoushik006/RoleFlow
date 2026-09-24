@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ToastProvider, useToast } from './context/ToastContext';
+import { ThemeProvider } from './context/ThemeContext';
 import { Sidebar } from './components/layout/Sidebar';
 import { Navbar } from './components/layout/Navbar';
 import { Loader } from './components/common/Loader';
@@ -57,7 +58,7 @@ const AppContent = () => {
   if (loading) {
     return (
       <div className="flex-center" style={{ minHeight: '100vh' }}>
-        <Loader message="Initializing JobTrack ecosystem..." />
+        <Loader message="Initializing RoleFlow ecosystem..." />
       </div>
     );
   }
@@ -189,10 +190,12 @@ const AppContent = () => {
 
 export default function App() {
   return (
-    <AuthProvider>
-      <ToastProvider>
-        <AppContent />
-      </ToastProvider>
-    </AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <ToastProvider>
+          <AppContent />
+        </ToastProvider>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }

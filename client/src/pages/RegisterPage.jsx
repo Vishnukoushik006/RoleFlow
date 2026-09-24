@@ -21,7 +21,7 @@ export const RegisterPage = ({ onNavigate }) => {
     setLoading(true);
     try {
       await register({ name, email, password, targetRole });
-      toast.success('Account created! Welcome to JobTrack.');
+      toast.success('Account created! Welcome to RoleFlow.');
       onNavigate('/dashboard');
     } catch (err) {
       toast.error(err.message || 'Registration failed');
@@ -36,7 +36,7 @@ export const RegisterPage = ({ onNavigate }) => {
 
         <div className="auth-brand">
           <span className="auth-dot">●</span>
-          <span className="auth-wordmark">JobTrack</span>
+          <span className="auth-wordmark">RoleFlow</span>
         </div>
 
         <h1 className="auth-heading">Create account</h1>

@@ -1,7 +1,7 @@
-const BASE_URL = '/api';
+const BASE_URL = import.meta.env.VITE_API_URL || '/api';
 
 export const request = async (endpoint, options = {}) => {
-  const token = localStorage.getItem('jobtrack_token');
+  const token = localStorage.getItem('roleflow_token');
   
   const headers = {
     ...options.headers
@@ -26,8 +26,8 @@ export const request = async (endpoint, options = {}) => {
   if (!response.ok) {
     if (response.status === 401 && !endpoint.includes('/auth/login')) {
       // Token expired or invalid
-      localStorage.removeItem('jobtrack_token');
-      localStorage.removeItem('jobtrack_user');
+      localStorage.removeItem('roleflow_token');
+      localStorage.removeItem('roleflow_user');
       if (window.location.pathname !== '/login') {
         window.location.href = '/login';
       }

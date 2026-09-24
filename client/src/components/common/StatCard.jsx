@@ -12,8 +12,8 @@ export const StatCard = ({ title, value, subtext, icon: Icon, color = '#c8956c' 
 
       <style>{`
         .stat-card {
-          background: #161616;
-          border: 1px solid rgba(255, 255, 255, 0.07);
+          background: var(--bg-card);
+          border: 1px solid var(--border);
           border-radius: 10px;
           padding: 18px 20px;
           display: flex;
@@ -22,7 +22,7 @@ export const StatCard = ({ title, value, subtext, icon: Icon, color = '#c8956c' 
           transition: border-color 0.15s ease;
         }
         .stat-card:hover {
-          border-color: rgba(255, 255, 255, 0.12);
+          border-color: var(--border-hover);
         }
         .stat-top {
           display: flex;
@@ -32,24 +32,24 @@ export const StatCard = ({ title, value, subtext, icon: Icon, color = '#c8956c' 
         .stat-label {
           font-size: 11.5px;
           font-weight: 500;
-          color: #5a5552;
+          color: var(--text-muted);
           text-transform: uppercase;
           letter-spacing: 0.06em;
         }
         .stat-icon {
-          color: #3a3836;
+          color: var(--text-muted);
         }
         .stat-value {
           font-size: 30px;
           font-weight: 600;
-          color: #edebe6;
+          color: var(--text-main);
           letter-spacing: -0.03em;
           line-height: 1;
           margin-top: 4px;
         }
         .stat-sub {
           font-size: 12px;
-          color: #4a4846;
+          color: var(--text-muted);
         }
       `}</style>
     </div>

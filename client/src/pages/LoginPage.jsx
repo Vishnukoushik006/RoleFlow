@@ -25,7 +25,7 @@ export const LoginPage = ({ onNavigate }) => {
   };
 
   const fillDemo = () => {
-    setEmail('demo@jobtrack.io');
+    setEmail('demo@roleflow.io');
     setPassword('demo1234');
   };
 
@@ -33,10 +33,13 @@ export const LoginPage = ({ onNavigate }) => {
     <div className="auth-root">
       <div className="auth-shell">
 
-        {/* Brand */}
-        <div className="auth-brand">
-          <span className="auth-dot">●</span>
-          <span className="auth-wordmark">JobTrack</span>
+        {/* Centered Brand Header */}
+        <div className="auth-brand-center">
+          <div className="auth-title-row">
+            <span className="auth-dot-large">●</span>
+            <span className="auth-name-large">RoleFlow</span>
+          </div>
+          <p className="auth-welcome-line">Welcome to my corner of Internet !</p>
         </div>
 
         <h1 className="auth-heading">Sign in</h1>
@@ -111,40 +114,59 @@ export const LoginPage = ({ onNavigate }) => {
         }
         .auth-shell {
           width: 100%;
-          max-width: 380px;
+          max-width: 400px;
           display: flex;
           flex-direction: column;
         }
-        .auth-brand {
+        .auth-brand-center {
           display: flex;
+          flex-direction: column;
           align-items: center;
-          gap: 7px;
-          margin-bottom: 32px;
+          justify-content: center;
+          text-align: center;
+          margin-bottom: 28px;
         }
-        .auth-dot {
-          font-size: 10px;
+        .auth-title-row {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 10px;
+        }
+        .auth-dot-large {
+          font-size: 16px;
           color: #c8956c;
           line-height: 1;
         }
-        .auth-wordmark {
-          font-size: 14px;
-          font-weight: 600;
-          color: #edebe6;
+        .auth-name-large {
+        font-family: 'IBM Plex Mono', monospace;
+          font-size: 40px;
+          font-weight: 700;
+          color: #E2E8F0;
+          letter-spacing: -0.03em;
+        }
+        .auth-welcome-line {
+        font-family: 'Lora', serif;
+          font-size: 28px;
+          color: #B2BEB5;
+          margin-top: 8px;
+          font-weight: 400;
           letter-spacing: -0.01em;
         }
         .auth-heading {
-          font-size: 26px;
+          font-size: 22px;
           font-weight: 600;
           color: #edebe6;
-          letter-spacing: -0.025em;
+          letter-spacing: -0.02em;
           margin-bottom: 6px;
-          line-height: 1.1;
+          line-height: 1.2;
+          text-align: center;
         }
         .auth-sub {
           font-size: 13px;
-          color: #5a5552;
+          color: #E2E8F0;
           line-height: 1.5;
-          margin-bottom: 32px;
+          margin-bottom: 26px;
+          text-align: center;
         }
         .auth-form {
           display: flex;
@@ -203,7 +225,7 @@ export const LoginPage = ({ onNavigate }) => {
           padding: 0;
           transition: color 0.12s;
         }
-        .forgot-btn:hover { color: #c8956c; }
+        .forgot-btn:hover { color: #5e5e5e; }
         .auth-submit {
           width: 100%;
           margin-top: 4px;
@@ -224,12 +246,13 @@ export const LoginPage = ({ onNavigate }) => {
           border-color: rgba(255,255,255,0.14);
         }
         .auth-footer {
-          margin-top: 28px;
+          margin-top: 24px;
           display: flex;
           align-items: center;
+          justify-content: center;
           gap: 6px;
           font-size: 13px;
-          color: #4a4846;
+          color: #6e6763;
         }
         .auth-link {
           background: transparent;

@@ -17,14 +17,14 @@ export const Sidebar = ({ currentPath, onNavigate }) => {
   const { user, logout } = useAuth();
 
   const navItems = [
-    { label: 'Dashboard',    path: '/dashboard',    icon: LayoutDashboard },
+    { label: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
     { label: 'Applications', path: '/applications', icon: Briefcase },
-    { label: 'Kanban',       path: '/kanban',       icon: KanbanSquare },
-    { label: 'Resumes',      path: '/resumes',      icon: FileText },
-    { label: 'Interviews',   path: '/interviews',   icon: Calendar },
-    { label: 'Reminders',    path: '/reminders',    icon: Bell },
-    { label: 'Analytics',    path: '/analytics',    icon: BarChart3 },
-    { label: 'Settings',     path: '/settings',     icon: Settings }
+    { label: 'Kanban', path: '/kanban', icon: KanbanSquare },
+    { label: 'Resumes', path: '/resumes', icon: FileText },
+    { label: 'Interviews', path: '/interviews', icon: Calendar },
+    { label: 'Reminders', path: '/reminders', icon: Bell },
+    { label: 'Analytics', path: '/analytics', icon: BarChart3 },
+    { label: 'Settings', path: '/settings', icon: Settings }
   ];
 
   return (
@@ -32,7 +32,7 @@ export const Sidebar = ({ currentPath, onNavigate }) => {
       {/* Wordmark */}
       <div className="sidebar-brand">
         <span className="brand-mark">●</span>
-        <span className="brand-name">JobTrack</span>
+        <span className="brand-name">RoleFlow</span>
       </div>
 
       {/* Nav */}
@@ -64,7 +64,7 @@ export const Sidebar = ({ currentPath, onNavigate }) => {
         <p>Capture jobs from any board in one click.</p>
         <a
           href="/api/extension/download"
-          download="jobtrack-extension.zip"
+          download="roleflow-extension.zip"
           className="btn btn-secondary btn-sm"
           style={{ width: '100%', marginTop: '8px', textAlign: 'center', textDecoration: 'none', display: 'block' }}
         >
@@ -72,7 +72,7 @@ export const Sidebar = ({ currentPath, onNavigate }) => {
         </a>
         <button
           className="btn-text"
-          style={{ width: '100%', marginTop: '6px', fontSize: '11px', color: '#5a5552', textAlign: 'center', cursor: 'pointer', background: 'none', border: 'none' }}
+          style={{ width: '100%', marginTop: '6px', fontSize: '11px', color: 'var(--text-muted)', textAlign: 'center', cursor: 'pointer', background: 'none', border: 'none' }}
           onClick={() => onNavigate('/settings')}
         >
           Setup instructions →
@@ -98,8 +98,8 @@ export const Sidebar = ({ currentPath, onNavigate }) => {
       <style>{`
         .sidebar {
           width: 220px;
-          background: #111111;
-          border-right: 1px solid rgba(255, 255, 255, 0.06);
+          background: var(--bg-card);
+          border-right: 1px solid var(--border);
           display: flex;
           flex-direction: column;
           flex-shrink: 0;
@@ -110,7 +110,7 @@ export const Sidebar = ({ currentPath, onNavigate }) => {
           align-items: center;
           gap: 9px;
           padding: 22px 18px 18px;
-          border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+          border-bottom: 1px solid var(--border);
         }
         .brand-mark {
           font-size: 10px;
@@ -119,8 +119,9 @@ export const Sidebar = ({ currentPath, onNavigate }) => {
         }
         .brand-name {
           font-size: 15px;
+          font-family: 'IBM Plex Mono', monospace;
           font-weight: 600;
-          color: #edebe6;
+          color: var(--text-main);
           letter-spacing: -0.01em;
         }
         .sidebar-nav {
@@ -136,7 +137,7 @@ export const Sidebar = ({ currentPath, onNavigate }) => {
           gap: 10px;
           padding: 8px 10px;
           border-radius: 6px;
-          color: #6b6866;
+          color: var(--text-muted);
           background: transparent;
           border: none;
           font-size: 13px;
@@ -148,23 +149,19 @@ export const Sidebar = ({ currentPath, onNavigate }) => {
           letter-spacing: -0.01em;
         }
         .nav-item:hover {
-          color: #d0cdc8;
-          background: rgba(255, 255, 255, 0.04);
+          color: var(--text-main);
+          background: var(--border);
         }
         .nav-item.active {
-          color: #edebe6;
-          background: rgba(255, 255, 255, 0.06);
+          color: var(--text-main);
+          background: var(--bg-surface);
           font-weight: 500;
-        }
-        .nav-item.active::before {
-          content: '';
-          display: none; /* no colored accent bar — let text weight speak */
         }
         .extension-hint {
           margin: 0 10px 12px;
           padding: 12px;
-          background: rgba(255, 255, 255, 0.03);
-          border: 1px solid rgba(255, 255, 255, 0.06);
+          background: var(--bg-surface);
+          border: 1px solid var(--border);
           border-radius: 8px;
         }
         .ext-hint-top {
@@ -180,16 +177,16 @@ export const Sidebar = ({ currentPath, onNavigate }) => {
         }
         .extension-hint p {
           font-size: 11.5px;
-          color: #5a5552;
+          color: var(--text-muted);
           line-height: 1.45;
         }
         .sidebar-footer {
           padding: 14px;
-          border-top: 1px solid rgba(255, 255, 255, 0.05);
+          border-top: 1px solid var(--border);
           display: flex;
           align-items: center;
           justify-content: space-between;
-          background: #0f0f0f;
+          background: var(--bg-app);
         }
         .user-row {
           display: flex;
@@ -202,8 +199,8 @@ export const Sidebar = ({ currentPath, onNavigate }) => {
           width: 28px;
           height: 28px;
           border-radius: 50%;
-          background: #252220;
-          border: 1px solid rgba(255, 255, 255, 0.08);
+          background: var(--bg-surface);
+          border: 1px solid var(--border);
           color: #c8956c;
           font-weight: 600;
           font-size: 12px;
@@ -220,14 +217,14 @@ export const Sidebar = ({ currentPath, onNavigate }) => {
         .user-name {
           font-size: 12.5px;
           font-weight: 500;
-          color: #c8c6c2;
+          color: var(--text-main);
           white-space: nowrap;
           text-overflow: ellipsis;
           overflow: hidden;
         }
         .user-role {
           font-size: 11px;
-          color: #4a4846;
+          color: var(--text-muted);
           white-space: nowrap;
           text-overflow: ellipsis;
           overflow: hidden;
@@ -235,7 +232,7 @@ export const Sidebar = ({ currentPath, onNavigate }) => {
         .logout-btn {
           background: transparent;
           border: none;
-          color: #4a4846;
+          color: var(--text-muted);
           cursor: pointer;
           padding: 5px;
           border-radius: 5px;
@@ -247,7 +244,6 @@ export const Sidebar = ({ currentPath, onNavigate }) => {
         .logout-btn:hover {
           color: #c86060;
         }
-
         @media (max-width: 860px) {
           .sidebar { width: 56px; }
           .brand-name, .nav-item span, .extension-hint, .user-meta, .logout-btn { display: none; }

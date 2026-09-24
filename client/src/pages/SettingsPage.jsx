@@ -72,7 +72,7 @@ export const SettingsPage = () => {
   const handleDownloadExtension = () => {
     const link = document.createElement('a');
     link.href = '/api/extension/download';
-    link.download = 'jobtrack-extension.zip';
+    link.download = 'roleflow-extension.zip';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -178,7 +178,7 @@ export const SettingsPage = () => {
             <Download size={18} />
             <div className="btn-download-text">
               <span className="btn-download-title">Download Extension</span>
-              <span className="btn-download-sub">jobtrack-extension.zip · Chrome / Edge / Brave</span>
+              <span className="btn-download-sub">roleflow-extension.zip · Chrome / Edge / Brave</span>
             </div>
           </button>
 
@@ -192,10 +192,10 @@ export const SettingsPage = () => {
                 Unzip the downloaded file to any folder on your computer.
               </li>
               <li>
-                Open Chrome → <code>chrome://extensions</code> → enable <strong>"Developer mode"</strong> → click <strong>"Load unpacked"</strong> → select the unzipped <code>jobtrack-extension</code> folder.
+                Open Chrome → <code>chrome://extensions</code> → enable <strong>"Developer mode"</strong> → click <strong>"Load unpacked"</strong> → select the unzipped <code>roleflow-extension</code> folder.
               </li>
               <li>
-                Pin JobTrack to your toolbar and start tracking jobs with one click!
+                Pin RoleFlow to your toolbar and start tracking jobs with one click!
               </li>
             </ol>
           </div>
@@ -277,12 +277,12 @@ export const SettingsPage = () => {
         .btn-download-title {
           font-size: 14px;
           font-weight: 600;
-          color: #edebe6;
+          color: var(--text-main);
           letter-spacing: -0.01em;
         }
         .btn-download-sub {
           font-size: 11.5px;
-          color: #6b6866;
+          color: var(--text-muted);
           margin-top: 2px;
         }
         .setup-steps {
@@ -291,16 +291,16 @@ export const SettingsPage = () => {
           flex-direction: column;
           gap: 8px;
           font-size: 13px;
-          color: #a09d98;
+          color: var(--text-secondary);
           margin-top: 8px;
         }
         .setup-steps code {
-          background: #1e1e1e;
+          background: var(--bg-surface);
           padding: 2px 6px;
           border-radius: 4px;
           font-family: var(--font-mono);
-          color: #edebe6;
-          border: 1px solid rgba(255, 255, 255, 0.06);
+          color: var(--text-main);
+          border: 1px solid var(--border);
         }
         .token-box {
           display: flex;

@@ -1,6 +1,6 @@
 /**
- * JobTrack Content Script (Manifest V3)
- * - Automatic Auth Synchronization from JobTrack Web App
+ * RoleFlow Content Script (Manifest V3)
+ * - Automatic Auth Synchronization from RoleFlow Web App
  * - Automatic 1-Click Job Capture when "Apply" or "Easy Apply" button is clicked
  * - In-Page Notification Toast & Quick Track Floating Widget
  */
@@ -12,7 +12,7 @@
   // Track recently saved URLs in memory to avoid duplicate rapid requests
   const trackedUrlsThisSession = new Set();
 
-  /* ─── 1. Automatic Auth-Sync from JobTrack Web App ──────────────────────── */
+  /* ─── 1. Automatic Auth-Sync from RoleFlow Web App ──────────────────────── */
   if (
     currentHost === 'localhost' ||
     currentHost === '127.0.0.1' ||
@@ -21,8 +21,8 @@
   ) {
     function syncAuthWithExtension() {
       try {
-        const token = localStorage.getItem('jobtrack_token');
-        const userStr = localStorage.getItem('jobtrack_user');
+        const token = localStorage.getItem('roleflow_token');
+        const userStr = localStorage.getItem('roleflow_user');
         let user = null;
         if (userStr) {
           try { user = JSON.parse(userStr); } catch (e) {}
@@ -46,12 +46,12 @@
 
     // Listen for login/logout events on the web app
     window.addEventListener('storage', (e) => {
-      if (e.key === 'jobtrack_token' || e.key === 'jobtrack_user') {
+      if (e.key === 'roleflow_token' || e.key === 'roleflow_user') {
         syncAuthWithExtension();
       }
     });
 
-    // Don't inject job tracking widgets on the JobTrack web app itself
+    // Don't inject job tracking widgets on the RoleFlow web app itself
     return;
   }
 
@@ -76,7 +76,7 @@
         jobData = window.parseGenericJob(document, url);
       }
     } catch (err) {
-      console.warn('[JobTrack] Parser error, falling back to generic:', err);
+      console.warn('[RoleFlow] Parser error, falling back to generic:', err);
       if (window.parseGenericJob) {
         jobData = window.parseGenericJob(document, url);
       }
@@ -86,13 +86,12 @@
   }
 
   /* ─── 3. In-Page Notification Toast ─────────────────────────────────────── */
-  function showJobTrackToast(message, isSuccess = true, viewUrl = null) {
-    // Remove existing toast if any
-    const existing = document.getElementById('jobtrack-inpage-toast');
+  function showRoleFlowToast(message, isSuccess = true, viewUrl = null) {
+    const existing = document.getElementById('roleflow-inpage-toast');
     if (existing) existing.remove();
 
     const toast = document.createElement('div');
-    toast.id = 'jobtrack-inpage-toast';
+    toast.id = 'roleflow-inpage-toast';
     toast.innerHTML = `
       <div style="
         position: fixed;
@@ -104,22 +103,22 @@
         box-shadow: 0 12px 36px rgba(0, 0, 0, 0.65);
         border-radius: 10px;
         padding: 14px 18px;
-        color: #edebe6;
+        color: #E2E8F0;
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         font-size: 13px;
         display: flex;
         flex-direction: column;
         gap: 4px;
         max-width: 360px;
-        animation: jobtrackSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        animation: roleflowSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
       ">
         <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
           <div style="display: flex; align-items: center; gap: 6px; font-weight: 600; font-size: 12px; color: #c8956c;">
-            <span style="font-size: 10px;">●</span> JobTrack Auto-Capture
+            <span style="font-size: 10px;">●</span> RoleFlow Auto-Capture
           </div>
           <span style="cursor: pointer; opacity: 0.6; font-size: 14px;" id="jt-toast-close">&times;</span>
         </div>
-        <div style="font-weight: 600; font-size: 13.5px; color: ${isSuccess ? '#edebe6' : '#fca5a5'};">
+        <div style="font-weight: 600; font-size: 13.5px; color: ${isSuccess ? '#E2E8F0' : '#fca5a5'};">
           ${message}
         </div>
         ${viewUrl ? `
@@ -136,7 +135,7 @@
         ` : ''}
       </div>
       <style>
-        @keyframes jobtrackSlideUp {
+        @keyframes roleflowSlideUp {
           from { transform: translateY(20px); opacity: 0; }
           to { transform: translateY(0); opacity: 1; }
         }
@@ -170,27 +169,26 @@
 
     const dedupeKey = `${jobData.companyName}__${jobData.jobTitle}`.toLowerCase();
     if (trackedUrlsThisSession.has(dedupeKey)) {
-      console.log('[JobTrack] Job already captured in this session:', dedupeKey);
+      console.log('[RoleFlow] Job already captured in this session:', dedupeKey);
       return;
     }
 
     trackedUrlsThisSession.add(dedupeKey);
     jobData.status = status;
 
-    console.log('[JobTrack] Auto-capturing job:', jobData.jobTitle, 'at', jobData.companyName);
+    console.log('[RoleFlow] Auto-capturing job:', jobData.jobTitle, 'at', jobData.companyName);
 
     chrome.runtime.sendMessage(
       { action: 'AUTO_TRACK_JOB', data: jobData },
       (response) => {
         if (response && response.success) {
-          showJobTrackToast(
+          showRoleFlowToast(
             `✓ Tracked as ${status}: ${jobData.jobTitle} @ ${jobData.companyName}`,
-            true,
             'http://localhost:5173/applications'
           );
 
           // Update floating button if visible
-          const floatBtn = document.getElementById('jobtrack-floating-btn');
+          const floatBtn = document.getElementById('roleflow-floating-btn');
           if (floatBtn) {
             floatBtn.innerText = `✓ Tracked as ${status}`;
             floatBtn.style.background = '#4aab7c';
@@ -199,9 +197,9 @@
           const errMsg = response?.error || 'Could not track application';
           // Only show error toast if it's an actionable message
           if (errMsg.includes('sign in') || errMsg.includes('connect')) {
-            showJobTrackToast(errMsg, false);
+            showRoleFlowToast(errMsg, false);
           } else {
-            console.warn('[JobTrack] Auto-track status:', errMsg);
+            console.warn('[RoleFlow] Auto-track status:', errMsg);
           }
         }
       }
@@ -247,7 +245,7 @@
     'click',
     (e) => {
       if (isApplyElement(e.target)) {
-        console.log('[JobTrack] Detected Apply button click!');
+        console.log('[RoleFlow] Detected Apply button click!');
         // Allow a 300ms breather for dynamic DOM elements to populate
         setTimeout(() => {
           autoCaptureJob('Applied');
@@ -266,7 +264,7 @@
       const formAction = (form.action || '').toLowerCase();
 
       if (formId.includes('application') || formId.includes('apply') || formAction.includes('apply') || formAction.includes('greenhouse') || formAction.includes('lever')) {
-        console.log('[JobTrack] Detected Application Form Submission!');
+        console.log('[RoleFlow] Detected Application Form Submission!');
         autoCaptureJob('Applied');
       }
     },
@@ -285,18 +283,18 @@
       document.querySelector('meta[property="og:type"][content="article"]') ||
       document.querySelector('.job-description, #job-details, .job-details');
 
-    if (!isJobPage || document.getElementById('jobtrack-floating-widget')) return;
+    if (!isJobPage || document.getElementById('roleflow-floating-widget')) return;
 
     const widget = document.createElement('div');
-    widget.id = 'jobtrack-floating-widget';
+    widget.id = 'roleflow-floating-widget';
     widget.innerHTML = `
-      <div id="jobtrack-floating-btn" style="
+      <div id="roleflow-floating-btn" style="
         position: fixed;
         bottom: 24px;
         right: 24px;
         z-index: 9999998;
         background: #161616;
-        color: #edebe6;
+        color: #E2E8F0;
         border: 1px solid rgba(200, 149, 108, 0.4);
         box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
         border-radius: 24px;
@@ -312,7 +310,7 @@
         transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
       ">
         <span style="color: #c8956c; font-size: 10px;">●</span>
-        <span>JobTrack</span>
+        <span>RoleFlow</span>
         <span style="opacity: 0.4;">|</span>
         <span style="color: #c8956c;">⚡ 1-Click Track</span>
       </div>
@@ -320,7 +318,7 @@
 
     document.body.appendChild(widget);
 
-    const btn = document.getElementById('jobtrack-floating-btn');
+    const btn = document.getElementById('roleflow-floating-btn');
     if (btn) {
       btn.addEventListener('mouseenter', () => {
         btn.style.transform = 'translateY(-2px)';

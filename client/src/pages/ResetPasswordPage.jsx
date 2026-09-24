@@ -43,7 +43,7 @@ export const ResetPasswordPage = ({ onNavigate, token: propToken }) => {
       const res = await authService.resetPassword(token, password);
       if (res.success && res.token && res.user) {
         setAuthSession(res.token, res.user);
-        toast.success('Password updated successfully! Welcome to JobTrack.');
+        toast.success('Password updated successfully! Welcome to RoleFlow.');
         onNavigate('/dashboard');
       }
     } catch (err) {
@@ -58,7 +58,7 @@ export const ResetPasswordPage = ({ onNavigate, token: propToken }) => {
       <div className="auth-shell">
         <div className="auth-brand">
           <span className="auth-dot">●</span>
-          <span className="auth-wordmark">JobTrack</span>
+          <span className="auth-wordmark">RoleFlow</span>
         </div>
 
         <h1 className="auth-heading">Set new password</h1>

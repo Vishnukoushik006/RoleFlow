@@ -117,8 +117,8 @@ export const ApplicationTable = ({
         .table-wrapper {
           width: 100%;
           overflow-x: auto;
-          background: #161616;
-          border: 1px solid rgba(255, 255, 255, 0.08);
+          background: var(--bg-card);
+          border: 1px solid var(--border);
           border-radius: 12px;
         }
         .app-table {
@@ -129,21 +129,21 @@ export const ApplicationTable = ({
         }
         .app-table th {
           padding: 14px 18px;
-          background: rgba(255, 255, 255, 0.02);
-          border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+          background: var(--bg-surface);
+          border-bottom: 1px solid var(--border);
           font-size: 11.5px;
           font-weight: 700;
-          color: #94a3b8;
+          color: var(--text-secondary);
           text-transform: uppercase;
           letter-spacing: 0.04em;
         }
         .table-row {
-          border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+          border-bottom: 1px solid var(--border);
           cursor: pointer;
           transition: background-color 0.15s ease;
         }
         .table-row:hover {
-          background-color: rgba(255, 255, 255, 0.04);
+          background-color: var(--border);
         }
         .table-row td {
           padding: 14px 18px;
@@ -159,15 +159,15 @@ export const ApplicationTable = ({
           height: 36px;
           border-radius: 8px;
           object-fit: cover;
-          background: #fff;
-          border: 1px solid rgba(255, 255, 255, 0.1);
+          background: var(--bg-card);
+          border: 1px solid var(--border-hover);
         }
         .company-logo-placeholder {
           width: 36px;
           height: 36px;
           border-radius: 8px;
-          background: rgba(255, 255, 255, 0.05);
-          border: 1px solid rgba(255, 255, 255, 0.08);
+          background: var(--border);
+          border: 1px solid var(--border);
           color: #c8956c;
           font-weight: 600;
           display: flex;
@@ -181,11 +181,11 @@ export const ApplicationTable = ({
         }
         .job-title-text {
           font-weight: 600;
-          color: #edebe6;
+          color: var(--text-main);
         }
         .company-name-text {
           font-size: 12px;
-          color: #94a3b8;
+          color: var(--text-secondary);
           display: flex;
           align-items: center;
           gap: 6px;
@@ -202,14 +202,14 @@ export const ApplicationTable = ({
         .location-cell {
           display: flex;
           flex-direction: column;
-          color: #cbd5e1;
+          color: var(--text-secondary);
         }
         .job-type-sub {
           font-size: 11px;
           color: #64748b;
         }
         .date-cell {
-          color: #94a3b8;
+          color: var(--text-secondary);
           font-family: var(--font-mono);
           font-size: 12px;
         }
@@ -250,8 +250,8 @@ export const ApplicationTable = ({
           align-items: center;
         }
         .btn-icon-action:hover {
-          color: #f8fafc;
-          background: rgba(255, 255, 255, 0.08);
+          color: var(--text-main);
+          background: var(--border);
         }
         .btn-icon-danger:hover {
           color: #ef4444;

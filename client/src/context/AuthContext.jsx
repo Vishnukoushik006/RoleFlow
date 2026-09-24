@@ -5,14 +5,14 @@ const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
-    const saved = localStorage.getItem('jobtrack_user');
+    const saved = localStorage.getItem('roleflow_user');
     try {
       return saved ? JSON.parse(saved) : null;
     } catch {
       return null;
     }
   });
-  const [token, setToken] = useState(() => localStorage.getItem('jobtrack_token') || null);
+  const [token, setToken] = useState(() => localStorage.getItem('roleflow_token') || null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -22,7 +22,7 @@ export const AuthProvider = ({ children }) => {
           const res = await authService.getMe();
           if (res.success && res.user) {
             setUser(res.user);
-            localStorage.setItem('jobtrack_user', JSON.stringify(res.user));
+            localStorage.setItem('roleflow_user', JSON.stringify(res.user));
           }
         } catch (err) {
           console.warn('Session verification failed, logging out');
@@ -40,8 +40,8 @@ export const AuthProvider = ({ children }) => {
     if (res.success && res.token) {
       setToken(res.token);
       setUser(res.user);
-      localStorage.setItem('jobtrack_token', res.token);
-      localStorage.setItem('jobtrack_user', JSON.stringify(res.user));
+      localStorage.setItem('roleflow_token', res.token);
+      localStorage.setItem('roleflow_user', JSON.stringify(res.user));
     }
     return res;
   };
@@ -51,8 +51,8 @@ export const AuthProvider = ({ children }) => {
     if (res.success && res.token) {
       setToken(res.token);
       setUser(res.user);
-      localStorage.setItem('jobtrack_token', res.token);
-      localStorage.setItem('jobtrack_user', JSON.stringify(res.user));
+      localStorage.setItem('roleflow_token', res.token);
+      localStorage.setItem('roleflow_user', JSON.stringify(res.user));
     }
     return res;
   };
@@ -60,14 +60,14 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     setToken(null);
     setUser(null);
-    localStorage.removeItem('jobtrack_token');
-    localStorage.removeItem('jobtrack_user');
+    localStorage.removeItem('roleflow_token');
+    localStorage.removeItem('roleflow_user');
   };
 
   const updateUser = (updatedData) => {
     setUser((prev) => {
       const merged = { ...prev, ...updatedData };
-      localStorage.setItem('jobtrack_user', JSON.stringify(merged));
+      localStorage.setItem('roleflow_user', JSON.stringify(merged));
       return merged;
     });
   };
@@ -75,8 +75,8 @@ export const AuthProvider = ({ children }) => {
   const setAuthSession = (tokenVal, userVal) => {
     setToken(tokenVal);
     setUser(userVal);
-    localStorage.setItem('jobtrack_token', tokenVal);
-    localStorage.setItem('jobtrack_user', JSON.stringify(userVal));
+    localStorage.setItem('roleflow_token', tokenVal);
+    localStorage.setItem('roleflow_user', JSON.stringify(userVal));
   };
 
   return (

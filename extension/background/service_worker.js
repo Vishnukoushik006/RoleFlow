@@ -1,15 +1,15 @@
 /**
- * JobTrack Background Service Worker (Manifest V3)
+ * RoleFlow Background Service Worker (Manifest V3)
  * Handles auto-tracking job submissions, token management, and badge updates
  */
 
 chrome.runtime.onInstalled.addListener(() => {
-  console.log('[JobTrack Extension] Installed and active.');
+  console.log('[RoleFlow Extension] Installed and active.');
   
   // Default API URL
   chrome.storage.local.get(['apiUrl'], (result) => {
     if (!result.apiUrl) {
-      chrome.storage.local.set({ apiUrl: 'http://localhost:5001' });
+      chrome.storage.local.set({ apiUrl: 'https://roleflow-api.onrender.com' });
     }
   });
 });
@@ -30,12 +30,12 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         user: message.user || null,
         apiUrl: message.apiUrl || 'http://localhost:5001'
       }, () => {
-        console.log('[JobTrack] Auth synced from web app session');
+        console.log('[RoleFlow] Auth synced from web app session');
         sendResponse({ success: true });
       });
     } else {
       chrome.storage.local.remove(['token', 'user'], () => {
-        console.log('[JobTrack] Auth cleared via web app logout');
+        console.log('[RoleFlow] Auth cleared via web app logout');
         sendResponse({ success: true });
       });
     }
@@ -61,10 +61,10 @@ async function handleAutoTrack(jobData) {
       const endpoint = (apiUrl || 'http://localhost:5001').replace(/\/$/, '');
 
       if (!token) {
-        console.warn('[JobTrack] Auto-track skipped: User not logged in to JobTrack');
+        console.warn('[RoleFlow] Auto-track skipped: User not logged in to RoleFlow');
         resolve({
           success: false,
-          error: 'Please sign in to JobTrack at http://localhost:5173 to enable automatic tracking.'
+          error: 'Please sign in to RoleFlow at http://localhost:5173 to enable automatic tracking.'
         });
         return;
       }
@@ -79,7 +79,7 @@ async function handleAutoTrack(jobData) {
           salary: jobData.salary || '',
           status: jobData.status || 'Applied',
           jobDescription: jobData.jobDescription || '',
-          notes: jobData.notes || 'Automatically captured on apply click by JobTrack.'
+          notes: jobData.notes || 'Automatically captured on apply click by RoleFlow.'
         };
 
         const response = await fetch(`${endpoint}/api/applications`, {
@@ -115,10 +115,10 @@ async function handleAutoTrack(jobData) {
           });
         }
       } catch (err) {
-        console.error('[JobTrack] Auto-track request error:', err);
+        console.error('[RoleFlow] Auto-track request error:', err);
         resolve({
           success: false,
-          error: 'Could not connect to JobTrack server. Make sure it is running at ' + endpoint
+          error: 'Could not connect to RoleFlow server. Make sure it is running at ' + endpoint
         });
       }
     });

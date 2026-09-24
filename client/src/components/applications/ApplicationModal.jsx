@@ -335,7 +335,7 @@ export const ApplicationModal = ({ isOpen, onClose, application = null, onSaved 
           gap: 12px;
           margin-top: 20px;
           padding-top: 16px;
-          border-top: 1px solid rgba(255, 255, 255, 0.08);
+          border-top: 1px solid var(--border);
         }
         @media (max-width: 640px) {
           .form-grid-2, .form-grid-3 {

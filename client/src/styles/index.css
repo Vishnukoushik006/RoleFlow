@@ -1,4 +1,4 @@
-/* ─── JobTrack Design System — "Ink & Paper Dark" ──────────────────────── */
+/* ─── RoleFlow Design System — "Ink & Paper Dark" ──────────────────────── */
 
 :root {
   /* Background layers */
@@ -15,7 +15,7 @@
   --border-subtle: rgba(255, 255, 255, 0.04);
 
   /* Text */
-  --text-main:      #edebe6;
+  --text-main:      #E2E8F0;
   --text-secondary: #8a8480;
   --text-muted:     #5a5552;
 
@@ -49,6 +49,56 @@
   /* Typography */
   --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-mono:   'JetBrains Mono', 'Fira Code', monospace;
+}
+
+/* ─── Light Mode Overrides ──────────────────────────────────────────────── */
+[data-theme="light"] {
+  --bg-app:           #EEEAE4;
+  --bg-card:          #F4F1EC;
+  --bg-card-hover:    #EDE8E0;
+  --bg-surface:       #E5E0D8;
+  --bg-surface-light: #DAD4CA;
+
+  --border:           rgba(100, 85, 65, 0.13);
+  --border-hover:     rgba(100, 85, 65, 0.22);
+  --border-subtle:    rgba(100, 85, 65, 0.06);
+
+  --text-main:        #1C1714;
+  --text-secondary:   #5C4F44;
+  --text-muted:       #9C8E82;
+
+  --shadow-sm: 0 1px 3px rgba(80, 60, 40, 0.08);
+  --shadow-md: 0 4px 16px rgba(80, 60, 40, 0.10);
+  --shadow-lg: 0 12px 32px rgba(80, 60, 40, 0.12);
+}
+
+[data-theme="light"] body {
+  background-color: var(--bg-app);
+  color: var(--text-main);
+}
+
+[data-theme="light"] ::-webkit-scrollbar-thumb { background: #CBD5E1; }
+[data-theme="light"] ::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
+
+[data-theme="light"] .select-field option {
+  background: #FFFFFF;
+  color: #0F172A;
+}
+
+/* ─── Theme transition — radial wipe from top-right ─────────────────────── */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-new(root) {
+  animation: theme-wipe 0.55s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  clip-path: circle(0% at 100% 0%);
+}
+
+@keyframes theme-wipe {
+  to { clip-path: circle(150% at 100% 0%); }
 }
 
 /* ─── Reset ─────────────────────────────────────────────────────────────── */

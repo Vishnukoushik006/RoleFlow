@@ -11,7 +11,7 @@ export class ErrorBoundary extends React.Component {
   }
 
   componentDidCatch(error, errorInfo) {
-    console.error('[JobTrack ErrorBoundary caught error]:', error, errorInfo);
+    console.error('[RoleFlow ErrorBoundary caught error]:', error, errorInfo);
   }
 
   handleReset = () => {
@@ -34,12 +34,12 @@ export class ErrorBoundary extends React.Component {
           justifyContent: 'center',
           padding: '40px 20px',
           textAlign: 'center',
-          background: '#161616',
-          border: '1px solid rgba(255, 255, 255, 0.08)',
+          background: 'var(--bg-card)',
+          border: '1px solid var(--border)',
           borderRadius: '12px',
           margin: '24px auto',
           maxWidth: '560px',
-          color: '#edebe6'
+          color: '#E2E8F0'
         }}>
           <div style={{
             width: '48px',
@@ -58,7 +58,7 @@ export class ErrorBoundary extends React.Component {
           <h3 style={{ fontSize: '18px', fontWeight: 600, marginBottom: '8px' }}>
             Unable to display this view
           </h3>
-          <p style={{ fontSize: '13px', color: '#8a8480', maxWidth: '420px', marginBottom: '20px', lineHeight: 1.5 }}>
+          <p style={{ fontSize: '13px', color: 'var(--text-secondary)', maxWidth: '420px', marginBottom: '20px', lineHeight: 1.5 }}>
             {this.state.error?.message || 'An unexpected error occurred while rendering this page.'}
           </p>
           <button
@@ -66,7 +66,7 @@ export class ErrorBoundary extends React.Component {
             style={{
               padding: '8px 18px',
               background: '#c8956c',
-              color: '#0f0f0f',
+              color: 'var(--bg-app)',
               border: 'none',
               borderRadius: '8px',
               fontSize: '13px',

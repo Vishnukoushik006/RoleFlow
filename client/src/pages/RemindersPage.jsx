@@ -207,22 +207,22 @@ export const RemindersPage = () => {
         }
         .tab-btn {
           padding: 8px 16px;
-          background: #161616;
-          border: 1px solid rgba(255, 255, 255, 0.08);
+          background: var(--bg-card);
+          border: 1px solid var(--border);
           border-radius: 8px;
-          color: #8a8480;
+          color: var(--text-secondary);
           font-size: 13px;
           font-weight: 500;
           cursor: pointer;
           transition: all 0.15s ease;
         }
         .tab-btn:hover {
-          color: #edebe6;
-          background: rgba(255, 255, 255, 0.05);
+          color: var(--text-main);
+          background: var(--border);
         }
         .tab-btn.active {
-          color: #edebe6;
-          background: #1e1e1e;
+          color: var(--text-main);
+          background: var(--bg-surface);
           border-color: rgba(200, 149, 108, 0.35);
         }
         .reminders-list {
@@ -239,7 +239,7 @@ export const RemindersPage = () => {
         }
         .reminder-item-card.completed {
           opacity: 0.6;
-          background: rgba(255, 255, 255, 0.01);
+          background: var(--border-subtle);
         }
         .reminder-item-card.past-due {
           border-color: rgba(239, 68, 68, 0.3);
@@ -267,7 +267,7 @@ export const RemindersPage = () => {
         .reminder-main-title {
           font-size: 14px;
           font-weight: 700;
-          color: #f8fafc;
+          color: var(--text-main);
         }
         .reminder-main-title.line-through {
           text-decoration: line-through;
@@ -286,7 +286,7 @@ export const RemindersPage = () => {
         }
         .reminder-description-text {
           font-size: 12.5px;
-          color: #94a3b8;
+          color: var(--text-secondary);
         }
         .reminder-date-meta {
           display: flex;
