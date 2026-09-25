@@ -1,4 +1,4 @@
-# JobTrack — Intelligent Job Application Tracker & Browser Extension
+# RoleFlow — Intelligent Job Application Tracker & Browser Extension
 
 [![JavaScript](https://img.shields.io/badge/Language-Pure%20JavaScript-F7DF1E.svg)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 [![Stack](https://img.shields.io/badge/Stack-MERN%20(Mongo%20%7C%20Express%20%7C%20React%20%7C%20Node)-6366f1.svg)](https://react.dev)
