@@ -16,8 +16,9 @@
 
   /* Text */
   --text-main:      #E2E8F0;
-  --text-secondary: #8a8480;
-  --text-muted:     #5a5552;
+  /* Keep supporting copy readable against the near-black dark surfaces. */
+  --text-secondary: #b8b1aa;
+  --text-muted:     #9a928b;
 
   /* Accent — warm amber/terracotta, used sparingly */
   --accent:        #c8956c;
