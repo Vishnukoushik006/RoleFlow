@@ -105,17 +105,8 @@ app.use('/api/*', (req, res) => {
   });
 });
 
-// Serve frontend build in production
-if (process.env.NODE_ENV === 'production') {
-  const clientDistPath = path.join(__dirname, '../client/dist');
-  app.use(express.static(clientDistPath));
-  app.get('*', (req, res, next) => {
-    if (req.originalUrl.startsWith('/api') || req.originalUrl.startsWith('/uploads')) {
-      return next();
-    }
-    res.sendFile(path.join(clientDistPath, 'index.html'));
-  });
-}
+// Root route
+app.get('/', (req, res) => res.send('RoleFlow API is running'));
 
 // Global Error Handler
 app.use(errorHandler);
