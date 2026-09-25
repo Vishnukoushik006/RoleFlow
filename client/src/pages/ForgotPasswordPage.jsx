@@ -1,102 +1,144 @@
 import React, { useState } from 'react';
+import { useAuth } from '../context/AuthContext';
 import { authService } from '../services/domainServices';
 import { useToast } from '../context/ToastContext';
-import { KeyRound, ArrowRight, ArrowLeft, Mail, CheckCircle2, Copy } from 'lucide-react';
+import { ArrowRight, ArrowLeft, Mail, Lock, Eye, EyeOff } from 'lucide-react';
 
 export const ForgotPasswordPage = ({ onNavigate }) => {
+  const { setAuthSession } = useAuth();
   const toast = useToast();
+
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [resetData, setResetData] = useState(null);
+  const [showPw, setShowPw] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!email.trim()) {
+      toast.error('Please enter your email address');
+      return;
+    }
+
+    if (password.length < 6) {
+      toast.error('Password must be at least 6 characters long');
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      toast.error('Passwords do not match');
+      return;
+    }
+
     setLoading(true);
     try {
-      const res = await authService.forgotPassword({ email });
+      const res = await authService.resetPassword({
+        email: email.trim().toLowerCase(),
+        password
+      });
+
       if (res.success) {
-        setResetData(res);
-        toast.success(res.message || 'Password reset link generated!');
+        if (res.token && res.user && setAuthSession) {
+          setAuthSession(res.token, res.user);
+        }
+        toast.success('Password updated successfully! Welcome to RoleFlow.');
+        onNavigate('/dashboard');
       }
     } catch (err) {
-      toast.error(err.message || 'Unable to request password reset');
+      toast.error(err.message || 'Unable to update password. Please check your email.');
     } finally {
       setLoading(false);
-    }
-  };
-
-  const copyToken = () => {
-    if (resetData?.resetToken) {
-      navigator.clipboard.writeText(resetData.resetToken);
-      toast.success('Reset token copied to clipboard!');
     }
   };
 
   return (
     <div className="auth-root">
       <div className="auth-shell">
-        <div className="auth-brand">
-          <span className="auth-dot">●</span>
-          <span className="auth-wordmark">JobTrack</span>
+
+        {/* Brand Header */}
+        <div className="auth-brand-center">
+          <div className="auth-title-row">
+            <span className="auth-dot-large">●</span>
+            <span className="auth-name-large">RoleFlow</span>
+          </div>
+          <p className="auth-welcome-line">Welcome to my corner of Internet !</p>
         </div>
 
-        <h1 className="auth-heading">Forgot password?</h1>
-        <p className="auth-sub">Enter your email and we'll send a secure password reset link.</p>
+        <h1 className="auth-heading">Reset password</h1>
+        <p className="auth-sub">Enter your email and choose a new password.</p>
 
-        {!resetData ? (
-          <form onSubmit={handleSubmit} className="auth-form">
-            <div className="auth-field">
-              <label className="auth-label">Email address</label>
-              <div className="auth-input-wrap">
-                <Mail size={14} className="auth-icon" />
-                <input
-                  type="email"
-                  className="auth-input"
-                  placeholder="you@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-              </div>
+        <form onSubmit={handleSubmit} className="auth-form">
+          <div className="auth-field">
+            <label className="auth-label">Account email</label>
+            <div className="auth-input-wrap">
+              <Mail size={14} className="auth-icon" />
+              <input
+                type="email"
+                className="auth-input"
+                placeholder="you@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
             </div>
-
-            <button type="submit" className="auth-submit-btn" disabled={loading}>
-              <span>{loading ? 'Sending link...' : 'Send reset link'}</span>
-              <ArrowRight size={14} />
-            </button>
-          </form>
-        ) : (
-          <div className="reset-success-box">
-            <div className="success-heading-row">
-              <CheckCircle2 size={16} className="text-emerald" />
-              <span className="success-heading">Reset link ready</span>
-            </div>
-            <p className="auth-sub" style={{ marginTop: '6px' }}>
-              Your password reset token has been generated.
-            </p>
-
-            {resetData.resetToken && (
-              <div className="token-display-card">
-                <span className="token-label">Token:</span>
-                <div className="token-code-row">
-                  <code>{resetData.resetToken}</code>
-                  <button type="button" className="token-copy-btn" onClick={copyToken} title="Copy Token">
-                    <Copy size={13} />
-                  </button>
-                </div>
-              </div>
-            )}
-
-            <button
-              type="button"
-              className="auth-submit-btn mt-4"
-              onClick={() => onNavigate(`/reset-password/${resetData.resetToken}`)}
-            >
-              <span>Continue to reset</span>
-              <ArrowRight size={14} />
-            </button>
           </div>
-        )}
+
+          <div className="auth-field">
+            <label className="auth-label">New password (min. 6 characters)</label>
+            <div className="auth-input-wrap">
+              <Lock size={14} className="auth-icon" />
+              <input
+                type={showPw ? 'text' : 'password'}
+                className="auth-input auth-input-pw"
+                placeholder="••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                minLength={6}
+              />
+              <button
+                type="button"
+                className="pw-eye"
+                onClick={() => setShowPw((v) => !v)}
+                tabIndex="-1"
+              >
+                {showPw ? <EyeOff size={14} /> : <Eye size={14} />}
+              </button>
+            </div>
+          </div>
+
+          <div className="auth-field">
+            <label className="auth-label">Confirm new password</label>
+            <div className="auth-input-wrap">
+              <Lock size={14} className="auth-icon" />
+              <input
+                type={showConfirm ? 'text' : 'password'}
+                className="auth-input auth-input-pw"
+                placeholder="••••••••"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+                minLength={6}
+              />
+              <button
+                type="button"
+                className="pw-eye"
+                onClick={() => setShowConfirm((v) => !v)}
+                tabIndex="-1"
+              >
+                {showConfirm ? <EyeOff size={14} /> : <Eye size={14} />}
+              </button>
+            </div>
+          </div>
+
+          <button type="submit" className="btn btn-primary btn-lg auth-submit" disabled={loading}>
+            {loading ? 'Updating password…' : 'Update password'}
+            {!loading && <ArrowRight size={15} />}
+          </button>
+        </form>
 
         <div className="auth-footer">
           <button className="auth-link" onClick={() => onNavigate('/login')}>
@@ -117,39 +159,59 @@ export const ForgotPasswordPage = ({ onNavigate }) => {
         }
         .auth-shell {
           width: 100%;
-          max-width: 380px;
+          max-width: 400px;
           display: flex;
           flex-direction: column;
         }
-        .auth-brand {
+        .auth-brand-center {
           display: flex;
+          flex-direction: column;
           align-items: center;
-          gap: 7px;
-          margin-bottom: 32px;
+          justify-content: center;
+          text-align: center;
+          margin-bottom: 24px;
         }
-        .auth-dot {
-          font-size: 10px;
+        .auth-title-row {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 10px;
+        }
+        .auth-dot-large {
+          font-size: 16px;
           color: #c8956c;
           line-height: 1;
         }
-        .auth-wordmark {
-          font-size: 14px;
-          font-weight: 600;
-          color: #edebe6;
+        .auth-name-large {
+          font-family: 'IBM Plex Mono', monospace;
+          font-size: 40px;
+          font-weight: 700;
+          color: #E2E8F0;
+          letter-spacing: -0.03em;
+        }
+        .auth-welcome-line {
+          font-family: 'Lora', serif;
+          font-size: 26px;
+          color: #B2BEB5;
+          margin-top: 8px;
+          font-weight: 400;
           letter-spacing: -0.01em;
         }
         .auth-heading {
-          font-size: 26px;
+          font-size: 22px;
           font-weight: 600;
           color: #edebe6;
-          letter-spacing: -0.025em;
+          letter-spacing: -0.02em;
           margin-bottom: 6px;
+          line-height: 1.2;
+          text-align: center;
         }
         .auth-sub {
-          font-size: 13.5px;
-          color: #8a8480;
+          font-size: 13px;
+          color: #A1A1AA;
           line-height: 1.5;
-          margin-bottom: 28px;
+          margin-bottom: 24px;
+          text-align: center;
         }
         .auth-form {
           display: flex;
@@ -162,143 +224,84 @@ export const ForgotPasswordPage = ({ onNavigate }) => {
           gap: 6px;
         }
         .auth-label {
-          font-size: 12.5px;
+          font-size: 12px;
           font-weight: 500;
           color: #8a8480;
         }
         .auth-input-wrap {
           position: relative;
-          display: flex;
-          align-items: center;
         }
         .auth-icon {
           position: absolute;
-          left: 13px;
-          color: #5a5552;
+          left: 10px;
+          top: 50%;
+          transform: translateY(-50%);
+          color: #4a4846;
           pointer-events: none;
         }
         .auth-input {
           width: 100%;
-          height: 40px;
-          padding: 0 13px 0 38px;
+          padding: 9px 12px 9px 32px;
           background: #161616;
-          border: 1px solid rgba(255, 255, 255, 0.08);
-          border-radius: 8px;
+          border: 1px solid rgba(255,255,255,0.07);
+          border-radius: 7px;
           color: #edebe6;
           font-size: 13.5px;
           outline: none;
-          transition: border-color 0.15s ease;
+          transition: border-color 0.14s ease;
         }
         .auth-input:focus {
           border-color: #c8956c;
         }
-        .auth-submit-btn {
-          height: 40px;
-          margin-top: 6px;
-          background: #c8956c;
-          color: #0f0f0f;
-          font-weight: 600;
-          font-size: 13.5px;
+        .auth-input::placeholder {
+          color: #3a3836;
+        }
+        .auth-input-pw {
+          padding-right: 36px;
+        }
+        .pw-eye {
+          position: absolute;
+          right: 10px;
+          top: 50%;
+          transform: translateY(-50%);
+          background: transparent;
           border: none;
-          border-radius: 8px;
+          color: #4a4846;
           cursor: pointer;
           display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 8px;
-          transition: background 0.15s ease;
+          padding: 0;
+          transition: color 0.12s;
         }
-        .auth-submit-btn:hover:not(:disabled) {
-          background: #b37d57;
+        .pw-eye:hover {
+          color: #8a8480;
         }
-        .auth-submit-btn:disabled {
-          opacity: 0.5;
-          cursor: not-allowed;
+        .auth-submit {
+          width: 100%;
+          margin-top: 4px;
         }
         .auth-footer {
           margin-top: 24px;
-          padding-top: 20px;
-          border-top: 1px solid rgba(255, 255, 255, 0.06);
           display: flex;
+          align-items: center;
           justify-content: center;
         }
         .auth-link {
-          background: none;
+          background: transparent;
           border: none;
           color: #8a8480;
           font-size: 13px;
+          font-weight: 500;
           cursor: pointer;
-          display: flex;
+          display: inline-flex;
           align-items: center;
           gap: 6px;
           padding: 0;
-          transition: color 0.15s ease;
+          transition: color 0.14s ease;
         }
         .auth-link:hover {
           color: #edebe6;
+          text-decoration: underline;
         }
-        .reset-success-box {
-          background: #161616;
-          border: 1px solid rgba(255, 255, 255, 0.08);
-          border-radius: 8px;
-          padding: 18px;
-        }
-        .success-heading-row {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-        }
-        .text-emerald { color: #4aab7c; }
-        .success-heading {
-          font-size: 14px;
-          font-weight: 600;
-          color: #edebe6;
-        }
-        .token-display-card {
-          margin-top: 14px;
-          background: #1e1e1e;
-          border: 1px solid rgba(255, 255, 255, 0.06);
-          border-radius: 6px;
-          padding: 10px 12px;
-          display: flex;
-          flex-direction: column;
-          gap: 4px;
-        }
-        .token-label {
-          font-size: 11px;
-          font-weight: 500;
-          color: #8a8480;
-          text-transform: uppercase;
-          letter-spacing: 0.05em;
-        }
-        .token-code-row {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          gap: 8px;
-        }
-        .token-code-row code {
-          font-family: var(--font-mono);
-          font-size: 11.5px;
-          color: #edebe6;
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }
-        .token-copy-btn {
-          background: none;
-          border: 1px solid rgba(255, 255, 255, 0.08);
-          color: #8a8480;
-          border-radius: 4px;
-          padding: 4px 6px;
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-        }
-        .token-copy-btn:hover {
-          color: #edebe6;
-          border-color: rgba(255, 255, 255, 0.2);
-        }
-        .mt-4 { margin-top: 16px; }
       `}</style>
     </div>
   );

@@ -4,7 +4,12 @@ export const authService = {
   register: (userData) => api.post('/auth/register', userData),
   login: (credentials) => api.post('/auth/login', credentials),
   forgotPassword: (data) => api.post('/auth/forgot-password', data),
-  resetPassword: (token, password) => api.post(`/auth/reset-password/${token}`, { password }),
+  resetPassword: (tokenOrData, password) => {
+    if (typeof tokenOrData === 'object') {
+      return api.post('/auth/reset-password', tokenOrData);
+    }
+    return api.post(`/auth/reset-password/${tokenOrData}`, { password });
+  },
   getMe: () => api.get('/auth/me'),
   updateProfile: (profileData) => api.put('/auth/profile', profileData)
 };

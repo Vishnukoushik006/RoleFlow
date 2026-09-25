@@ -210,21 +210,15 @@ const forgotPassword = async (req, res, next) => {
   }
 };
 
-// @desc    Reset Password with Token
+// @desc    Reset Password (Supports direct email reset or token reset)
+// @route   POST /api/auth/reset-password
 // @route   POST /api/auth/reset-password/:resetToken
 // @access  Public
 const resetPassword = async (req, res, next) => {
   const crypto = require('crypto');
   try {
     const token = req.params.resetToken || req.body.resetToken;
-    const { password } = req.body;
-
-    if (!token) {
-      return res.status(400).json({
-        success: false,
-        message: 'Password reset token is missing'
-      });
-    }
+    const { email, password } = req.body;
 
     if (!password || password.length < 6) {
       return res.status(400).json({
@@ -233,28 +227,44 @@ const resetPassword = async (req, res, next) => {
       });
     }
 
-    // Get hashed token
-    const resetPasswordToken = crypto
-      .createHash('sha256')
-      .update(token)
-      .digest('hex');
+    let user = null;
 
-    const user = await User.findOne({
-      resetPasswordToken,
-      resetPasswordExpire: { $gt: Date.now() }
-    });
+    if (token) {
+      // Token-based reset
+      const resetPasswordToken = crypto
+        .createHash('sha256')
+        .update(token)
+        .digest('hex');
 
-    if (!user) {
+      user = await User.findOne({
+        resetPasswordToken,
+        resetPasswordExpire: { $gt: Date.now() }
+      });
+
+      if (!user) {
+        return res.status(400).json({
+          success: false,
+          message: 'Invalid or expired password reset token'
+        });
+      }
+    } else if (email) {
+      // Direct reset by email
+      user = await User.findOne({ email: email.toLowerCase().trim() });
+
+      if (!user) {
+        return res.status(404).json({
+          success: false,
+          message: 'No account found with this email address'
+        });
+      }
+    } else {
       return res.status(400).json({
         success: false,
-        message: 'Invalid or expired password reset token'
+        message: 'Please provide either your account email or a valid reset token'
       });
     }
 
     // Set new password
-    console.log('[DEBUG Reset] token:', token);
-    console.log('[DEBUG Reset] password received:', password ? `${password.length} chars` : 'UNDEFINED');
-    console.log('[DEBUG Reset] user found:', user.email);
     user.password = password;
     user.resetPasswordToken = undefined;
     user.resetPasswordExpire = undefined;
@@ -264,7 +274,7 @@ const resetPassword = async (req, res, next) => {
 
     res.json({
       success: true,
-      message: 'Password reset successfully. You are now logged in.',
+      message: 'Password updated successfully! Welcome to RoleFlow.',
       token: jwtToken,
       user: {
         id: user._id,
