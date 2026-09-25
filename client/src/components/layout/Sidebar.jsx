@@ -63,7 +63,7 @@ export const Sidebar = ({ currentPath, onNavigate }) => {
         </div>
         <p>Capture jobs from any board in one click.</p>
         <a
-          href="/api/extension/download"
+          href={`${import.meta.env.VITE_API_URL || 'https://roleflow-backend.onrender.com/api'}/extension/download`}
           download="roleflow-extension.zip"
           className="btn btn-secondary btn-sm"
           style={{ width: '100%', marginTop: '8px', textAlign: 'center', textDecoration: 'none', display: 'block' }}

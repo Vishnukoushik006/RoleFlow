@@ -71,7 +71,7 @@ export const SettingsPage = () => {
 
   const handleDownloadExtension = () => {
     const link = document.createElement('a');
-    link.href = '/api/extension/download';
+    link.href = `${import.meta.env.VITE_API_URL || 'https://roleflow-backend.onrender.com/api'}/extension/download`;
     link.download = 'roleflow-extension.zip';
     document.body.appendChild(link);
     link.click();
