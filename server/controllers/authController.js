@@ -2,11 +2,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
 const generateToken = (id) => {
-  return jwt.sign(
-    { id },
-    process.env.JWT_SECRET || 'roleflow_secure_jwt_secret_key_2026',
-    { expiresIn: process.env.JWT_EXPIRE || '30d' }
-  );
+  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE || '30d' });
 };
 
 // @desc    Register a new user
