@@ -15,6 +15,9 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(() => localStorage.getItem('roleflow_token') || null);
   const [loading, setLoading] = useState(true);
 
+  // A session only needs to be verified when the app first opens. Login and
+  // registration already return the current user, so verifying again whenever
+  // `token` changes adds an unnecessary request right as the dashboard loads.
   useEffect(() => {
     const verifyAuth = async () => {
       if (token) {
@@ -33,7 +36,10 @@ export const AuthProvider = ({ children }) => {
     };
 
     verifyAuth();
-  }, [token]);
+    // Intentionally run once: subsequent token changes come from a successful
+    // login/register response, which has already established the session.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const login = async (email, password) => {
     const res = await authService.login({ email, password });

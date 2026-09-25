@@ -65,14 +65,12 @@ export const Sidebar = ({ currentPath, onNavigate }) => {
         <a
           href={`${import.meta.env.VITE_API_URL || 'https://roleflow-backend.onrender.com/api'}/extension/download`}
           download="roleflow-extension.zip"
-          className="btn btn-secondary btn-sm"
-          style={{ width: '100%', marginTop: '8px', textAlign: 'center', textDecoration: 'none', display: 'block' }}
+          className="btn btn-sm extension-download"
         >
           ↓ Download .zip
         </a>
         <button
-          className="btn-text"
-          style={{ width: '100%', marginTop: '6px', fontSize: '11px', color: 'var(--text-muted)', textAlign: 'center', cursor: 'pointer', background: 'none', border: 'none' }}
+          className="extension-setup"
           onClick={() => onNavigate('/settings')}
         >
           Setup instructions →
@@ -160,8 +158,8 @@ export const Sidebar = ({ currentPath, onNavigate }) => {
         .extension-hint {
           margin: 0 10px 12px;
           padding: 12px;
-          background: var(--bg-surface);
-          border: 1px solid var(--border);
+          background: var(--accent-dim);
+          border: 1px solid var(--accent-border);
           border-radius: 8px;
         }
         .ext-hint-top {
@@ -177,8 +175,38 @@ export const Sidebar = ({ currentPath, onNavigate }) => {
         }
         .extension-hint p {
           font-size: 11.5px;
-          color: var(--text-muted);
+          color: var(--text-secondary);
           line-height: 1.45;
+        }
+        .extension-download {
+          width: 100%;
+          margin-top: 8px;
+          display: flex;
+          text-align: center;
+          text-decoration: none;
+          background: var(--accent);
+          border-color: var(--accent);
+          color: #1a0e06;
+          font-weight: 600;
+        }
+        .extension-download:hover {
+          background: var(--accent-hover);
+          border-color: var(--accent-hover);
+        }
+        .extension-setup {
+          width: 100%;
+          margin-top: 6px;
+          padding: 2px 0;
+          font-size: 11px;
+          color: var(--text-secondary);
+          text-align: center;
+          cursor: pointer;
+          background: none;
+          border: none;
+        }
+        .extension-setup:hover {
+          color: var(--text-main);
+          text-decoration: underline;
         }
         .sidebar-footer {
           padding: 14px;
