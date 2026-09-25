@@ -68,6 +68,8 @@ const login = async (req, res, next) => {
     }
 
     const user = await User.findOne({ email: email.toLowerCase().trim() }).select('+password');
+    console.log('[DEBUG Login] user found:', user ? user.email : 'NOT FOUND');
+    console.log('[DEBUG Login] hash exists:', Boolean(user?.password));
     if (!user) {
       return res.status(401).json({
         success: false,
@@ -250,6 +252,9 @@ const resetPassword = async (req, res, next) => {
     }
 
     // Set new password
+    console.log('[DEBUG Reset] token:', token);
+    console.log('[DEBUG Reset] password received:', password ? `${password.length} chars` : 'UNDEFINED');
+    console.log('[DEBUG Reset] user found:', user.email);
     user.password = password;
     user.resetPasswordToken = undefined;
     user.resetPasswordExpire = undefined;
