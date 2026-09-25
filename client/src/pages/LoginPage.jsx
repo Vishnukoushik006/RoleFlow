@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
-import { ArrowRight, Lock, Mail } from 'lucide-react';
+import { ArrowRight, Lock, Mail, Eye, EyeOff } from 'lucide-react';
 
 export const LoginPage = ({ onNavigate }) => {
   const { login } = useAuth();
@@ -9,6 +9,7 @@ export const LoginPage = ({ onNavigate }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showPw, setShowPw] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -75,13 +76,16 @@ export const LoginPage = ({ onNavigate }) => {
             <div className="auth-input-wrap">
               <Lock size={14} className="auth-icon" />
               <input
-                type="password"
-                className="auth-input"
+                type={showPw ? 'text' : 'password'}
+                className="auth-input auth-input-pw"
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
               />
+              <button type="button" className="pw-eye" onClick={() => setShowPw(v => !v)}>
+                {showPw ? <EyeOff size={14} /> : <Eye size={14} />}
+              </button>
             </div>
           </div>
 
@@ -216,6 +220,21 @@ export const LoginPage = ({ onNavigate }) => {
         .auth-input::placeholder {
           color: #3a3836;
         }
+        .auth-input-pw { padding-right: 36px; }
+        .pw-eye {
+          position: absolute;
+          right: 10px;
+          top: 50%;
+          transform: translateY(-50%);
+          background: transparent;
+          border: none;
+          color: #4a4846;
+          cursor: pointer;
+          display: flex;
+          padding: 0;
+          transition: color 0.12s;
+        }
+        .pw-eye:hover { color: #8a8480; }
         .forgot-btn {
           background: transparent;
           border: none;
