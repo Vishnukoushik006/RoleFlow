@@ -16,6 +16,8 @@ client/build/
 # Uploaded files (user data)
 server/uploads/
 
+# Keep server/public (extension zip)
+
 # MongoDB local data
 server/data/
 

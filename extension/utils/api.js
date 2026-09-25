@@ -6,7 +6,7 @@ const getApiConfig = async () => {
   return new Promise((resolve) => {
     chrome.storage.local.get(['apiUrl', 'token', 'user'], (data) => {
       resolve({
-        apiUrl: data.apiUrl || 'http://localhost:5001',
+        apiUrl: data.apiUrl || 'https://roleflow-backend.onrender.com/api',
         token: data.token || '',
         user: data.user || null
       });
@@ -44,9 +44,9 @@ if (typeof window !== 'undefined') {
   window.ExtensionApi = {
     getApiConfig,
     apiRequest,
-    getMe: () => apiRequest('/api/auth/me'),
-    login: (email, password) => apiRequest('/api/auth/login', 'POST', { email, password }),
-    getResumes: () => apiRequest('/api/resumes'),
-    createApplication: (appData) => apiRequest('/api/applications', 'POST', appData)
+    getMe: () => apiRequest('/auth/me'),
+    login: (email, password) => apiRequest('/auth/login', 'POST', { email, password }),
+    getResumes: () => apiRequest('/resumes'),
+    createApplication: (appData) => apiRequest('/applications', 'POST', appData)
   };
 }

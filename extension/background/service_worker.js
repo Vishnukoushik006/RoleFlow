@@ -9,7 +9,7 @@ chrome.runtime.onInstalled.addListener(() => {
   // Default API URL
   chrome.storage.local.get(['apiUrl'], (result) => {
     if (!result.apiUrl) {
-      chrome.storage.local.set({ apiUrl: 'https://roleflow-api.onrender.com' });
+      chrome.storage.local.set({ apiUrl: 'https://roleflow-backend.onrender.com/api' });
     }
   });
 });
@@ -28,7 +28,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       chrome.storage.local.set({
         token: message.token,
         user: message.user || null,
-        apiUrl: message.apiUrl || 'http://localhost:5001'
+        apiUrl: message.apiUrl || 'https://roleflow-backend.onrender.com/api'
       }, () => {
         console.log('[RoleFlow] Auth synced from web app session');
         sendResponse({ success: true });
@@ -58,13 +58,13 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 async function handleAutoTrack(jobData) {
   return new Promise((resolve) => {
     chrome.storage.local.get(['token', 'apiUrl'], async ({ token, apiUrl }) => {
-      const endpoint = (apiUrl || 'http://localhost:5001').replace(/\/$/, '');
+      const endpoint = (apiUrl || 'https://roleflow-backend.onrender.com/api').replace(/\/$/, '');
 
       if (!token) {
         console.warn('[RoleFlow] Auto-track skipped: User not logged in to RoleFlow');
         resolve({
           success: false,
-          error: 'Please sign in to RoleFlow at http://localhost:5173 to enable automatic tracking.'
+          error: 'Please sign in to RoleFlow at https://role-flow-five.vercel.app to enable automatic tracking.'
         });
         return;
       }
@@ -82,7 +82,7 @@ async function handleAutoTrack(jobData) {
           notes: jobData.notes || 'Automatically captured on apply click by RoleFlow.'
         };
 
-        const response = await fetch(`${endpoint}/api/applications`, {
+        const response = await fetch(`${endpoint}/applications`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
