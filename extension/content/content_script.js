@@ -158,12 +158,17 @@
   function autoCaptureJob(status = 'Applied') {
     const jobData = extractCurrentPageJob();
 
-    if (!jobData || (!jobData.jobTitle && !jobData.companyName)) {
+    if (!jobData || !jobData.jobTitle || !jobData.companyName) {
       return;
     }
 
-    // Skip placeholder names
-    if (jobData.jobTitle === 'Job Role' && jobData.companyName === 'Company') {
+    // Skip generic placeholder fallbacks
+    const genericTitles = ['job role', 'software engineer', 'role', 'position'];
+    const genericCompanies = ['company', 'employer', 'organization'];
+    if (
+      genericTitles.includes(jobData.jobTitle.toLowerCase()) ||
+      genericCompanies.includes(jobData.companyName.toLowerCase())
+    ) {
       return;
     }
 

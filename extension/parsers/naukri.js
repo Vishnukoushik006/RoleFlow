@@ -44,8 +44,8 @@ function parseNaukriJob(document, locationHref) {
   }
 
   return {
-    jobTitle: jobTitle || 'Software Engineer',
-    companyName: companyName || 'Company',
+    jobTitle: jobTitle || null,
+    companyName: companyName || null,
     location: location || 'India / Remote',
     jobUrl,
     source: 'Naukri',
