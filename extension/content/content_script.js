@@ -1,15 +1,16 @@
 /**
  * RoleFlow Content Script (Manifest V3)
  * - Automatic Auth Synchronization from RoleFlow Web App
- * - Automatic 1-Click Job Capture when "Apply" or "Easy Apply" button is clicked
- * - In-Page Notification Toast & Quick Track Floating Widget
+ * - Smart Job Detection (Only activates on verified job detail pages)
+ * - Interactive Confirmation Prompt (No unwanted silent tracking)
+ * - 1-Click Floating Quick-Track Widget
  */
 
 (function () {
   const currentHost = window.location.hostname.toLowerCase();
   const currentUrl = window.location.href;
 
-  // Track recently saved URLs in memory to avoid duplicate rapid requests
+  // Track recently saved URLs in memory to avoid duplicate requests
   const trackedUrlsThisSession = new Set();
 
   /* ─── 1. Automatic Auth-Sync from RoleFlow Web App ──────────────────────── */
@@ -41,17 +42,14 @@
       }
     }
 
-    // Sync on page load
     syncAuthWithExtension();
 
-    // Listen for login/logout events on the web app
     window.addEventListener('storage', (e) => {
       if (e.key === 'roleflow_token' || e.key === 'roleflow_user') {
         syncAuthWithExtension();
       }
     });
 
-    // Don't inject job tracking widgets on the RoleFlow web app itself
     return;
   }
 
@@ -72,14 +70,43 @@
         jobData = window.parseGreenhouseJob(document, url);
       } else if (host.includes('lever.co') && window.parseLeverJob) {
         jobData = window.parseLeverJob(document, url);
-      } else if (window.parseGenericJob) {
+      } else if (
+        // Only run generic parser if page actually looks like a job posting
+        document.querySelector('.job-description, #job-details, .job-details, [itemtype*="JobPosting"]') &&
+        window.parseGenericJob
+      ) {
         jobData = window.parseGenericJob(document, url);
       }
     } catch (err) {
-      console.warn('[RoleFlow] Parser error, falling back to generic:', err);
-      if (window.parseGenericJob) {
-        jobData = window.parseGenericJob(document, url);
-      }
+      console.warn('[RoleFlow] Parser error:', err);
+    }
+
+    if (!jobData || !jobData.jobTitle || !jobData.companyName) {
+      return null;
+    }
+
+    // Filter out obvious generic non-job placeholders
+    const badTitles = [
+      'find your dream job',
+      'job search',
+      'jobs in india',
+      'search jobs',
+      'home',
+      'feed',
+      'dashboard',
+      'role',
+      'job role'
+    ];
+    const badCompanies = ['naukri', 'linkedin', 'indeed', 'company', 'employer'];
+
+    const tLower = jobData.jobTitle.toLowerCase();
+    const cLower = jobData.companyName.toLowerCase();
+
+    if (
+      badTitles.some((bt) => tLower.includes(bt)) ||
+      badCompanies.includes(cLower)
+    ) {
+      return null;
     }
 
     return jobData;
@@ -114,11 +141,11 @@
       ">
         <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
           <div style="display: flex; align-items: center; gap: 6px; font-weight: 600; font-size: 12px; color: #c8956c;">
-            <span style="font-size: 10px;">●</span> RoleFlow Auto-Capture
+            <span style="font-size: 10px;">●</span> RoleFlow
           </div>
           <span style="cursor: pointer; opacity: 0.6; font-size: 14px;" id="jt-toast-close">&times;</span>
         </div>
-        <div style="font-weight: 600; font-size: 13.5px; color: ${isSuccess ? '#E2E8F0' : '#fca5a5'};">
+        <div style="font-weight: 600; font-size: 13px; color: ${isSuccess ? '#E2E8F0' : '#fca5a5'};">
           ${message}
         </div>
         ${viewUrl ? `
@@ -143,76 +170,137 @@
     `;
 
     document.body.appendChild(toast);
-
-    document.getElementById('jt-toast-close')?.addEventListener('click', () => {
-      toast.remove();
-    });
-
-    // Auto dismiss after 6 seconds
-    setTimeout(() => {
-      if (toast.parentNode) toast.remove();
-    }, 6000);
+    document.getElementById('jt-toast-close')?.addEventListener('click', () => toast.remove());
+    setTimeout(() => { if (toast.parentNode) toast.remove(); }, 6000);
   }
 
-  /* ─── 4. Automatic Job Capture Routine ──────────────────────────────────── */
-  function autoCaptureJob(status = 'Applied') {
-    const jobData = extractCurrentPageJob();
-
-    if (!jobData || !jobData.jobTitle || !jobData.companyName) {
-      return;
-    }
-
-    // Skip generic placeholder fallbacks
-    const genericTitles = ['job role', 'software engineer', 'role', 'position'];
-    const genericCompanies = ['company', 'employer', 'organization'];
-    if (
-      genericTitles.includes(jobData.jobTitle.toLowerCase()) ||
-      genericCompanies.includes(jobData.companyName.toLowerCase())
-    ) {
-      return;
-    }
+  /* ─── 4. Explicit Job Capture Routine ───────────────────────────────────── */
+  function executeTrackJob(jobData, status = 'Applied') {
+    if (!jobData || !jobData.jobTitle || !jobData.companyName) return;
 
     const dedupeKey = `${jobData.companyName}__${jobData.jobTitle}`.toLowerCase();
     if (trackedUrlsThisSession.has(dedupeKey)) {
-      console.log('[RoleFlow] Job already captured in this session:', dedupeKey);
+      showRoleFlowToast(`Already tracked: ${jobData.jobTitle} @ ${jobData.companyName}`);
       return;
     }
 
     trackedUrlsThisSession.add(dedupeKey);
     jobData.status = status;
 
-    console.log('[RoleFlow] Auto-capturing job:', jobData.jobTitle, 'at', jobData.companyName);
-
     chrome.runtime.sendMessage(
       { action: 'AUTO_TRACK_JOB', data: jobData },
       (response) => {
         if (response && response.success) {
           showRoleFlowToast(
-            `✓ Tracked as ${status}: ${jobData.jobTitle} @ ${jobData.companyName}`,
+            `✓ Saved as ${status}: ${jobData.jobTitle} @ ${jobData.companyName}`,
+            true,
             'http://localhost:5173/applications'
           );
 
-          // Update floating button if visible
           const floatBtn = document.getElementById('roleflow-floating-btn');
           if (floatBtn) {
-            floatBtn.innerText = `✓ Tracked as ${status}`;
-            floatBtn.style.background = '#4aab7c';
+            floatBtn.innerText = `✓ Tracked (${status})`;
+            floatBtn.style.background = '#22c55e';
+            floatBtn.style.borderColor = '#22c55e';
           }
         } else {
           const errMsg = response?.error || 'Could not track application';
-          // Only show error toast if it's an actionable message
-          if (errMsg.includes('sign in') || errMsg.includes('connect')) {
-            showRoleFlowToast(errMsg, false);
-          } else {
-            console.warn('[RoleFlow] Auto-track status:', errMsg);
-          }
+          showRoleFlowToast(errMsg, false);
         }
       }
     );
   }
 
-  /* ─── 5. Detect Clicks on "Apply" Buttons ────────────────────────────────── */
-  function isApplyElement(el) {
+  /* ─── 5. Confirmation Prompt Banner (When Apply Click Detected) ─────────── */
+  function promptTrackConfirmation(jobData) {
+    const existing = document.getElementById('roleflow-prompt-modal');
+    if (existing) return;
+
+    const dedupeKey = `${jobData.companyName}__${jobData.jobTitle}`.toLowerCase();
+    if (trackedUrlsThisSession.has(dedupeKey)) return;
+
+    const promptEl = document.createElement('div');
+    promptEl.id = 'roleflow-prompt-modal';
+    promptEl.innerHTML = `
+      <div style="
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 9999999;
+        background: #18181b;
+        border: 1px solid rgba(200, 149, 108, 0.5);
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.7);
+        border-radius: 12px;
+        padding: 16px 20px;
+        color: #f4f4f5;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font-size: 13px;
+        max-width: 380px;
+        animation: roleflowSlideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      ">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+          <div style="display: flex; align-items: center; gap: 6px; font-weight: 700; color: #c8956c; font-size: 12px;">
+            <span>●</span> RoleFlow Job Capture
+          </div>
+          <button id="rf-prompt-close" style="background:none; border:none; color:#a1a1aa; cursor:pointer; font-size:16px;">&times;</button>
+        </div>
+        <div style="font-weight: 600; font-size: 14px; margin-bottom: 4px; color: #fff;">
+          Track this job?
+        </div>
+        <div style="font-size: 12.5px; color: #d4d4d8; margin-bottom: 12px; line-height: 1.4;">
+          <strong>${jobData.jobTitle}</strong> at <strong>${jobData.companyName}</strong>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <button id="rf-track-applied" style="
+            flex: 1;
+            background: #c8956c;
+            color: #000;
+            border: none;
+            border-radius: 6px;
+            padding: 7px 10px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+          ">Track as Applied</button>
+          <button id="rf-track-saved" style="
+            flex: 1;
+            background: rgba(255,255,255,0.08);
+            color: #e4e4e7;
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 6px;
+            padding: 7px 10px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+          ">Save for Later</button>
+        </div>
+      </div>
+      <style>
+        @keyframes roleflowSlideDown {
+          from { transform: translateY(-20px); opacity: 0; }
+          to { transform: translateY(0); opacity: 1; }
+        }
+      </style>
+    `;
+
+    document.body.appendChild(promptEl);
+
+    document.getElementById('rf-prompt-close')?.addEventListener('click', () => promptEl.remove());
+    document.getElementById('rf-track-applied')?.addEventListener('click', () => {
+      promptEl.remove();
+      executeTrackJob(jobData, 'Applied');
+    });
+    document.getElementById('rf-track-saved')?.addEventListener('click', () => {
+      promptEl.remove();
+      executeTrackJob(jobData, 'Saved');
+    });
+
+    // Auto-dismiss after 10 seconds if ignored
+    setTimeout(() => { if (promptEl.parentNode) promptEl.remove(); }, 10000);
+  }
+
+  /* ─── 6. Detect Intentional "Apply" Actions ──────────────────────────────── */
+  function isGenuineApplyButton(el) {
     if (!el) return false;
     const target = el.closest('button, a, input[type="submit"], input[type="button"], [role="button"]');
     if (!target) return false;
@@ -221,74 +309,66 @@
     const id = (target.id || '').toLowerCase();
     const className = (target.className || '').toString().toLowerCase();
 
-    // Check words
-    const applyKeywords = [
-      'easy apply',
-      'apply now',
-      'apply on company',
-      'apply with resume',
-      'apply to job',
-      'submit application',
-      'complete application',
-      'send application',
-      'apply'
+    // NEVER trigger on search, filter, or navigation buttons
+    const excludedKeywords = [
+      'filter',
+      'search',
+      'save',
+      'cancel',
+      'edit',
+      'coupon',
+      'promo',
+      'applied',
+      'history',
+      'terms',
+      'register',
+      'sign in',
+      'login',
+      'browse'
+    ];
+    if (excludedKeywords.some((w) => text.includes(w) || id.includes(w) || className.includes(w))) {
+      return false;
+    }
+
+    // Strict positive match on application submission buttons
+    const exactApplyPatterns = [
+      /^easy apply$/i,
+      /^apply now$/i,
+      /^apply on company site$/i,
+      /^apply to job$/i,
+      /^submit application$/i,
+      /^complete application$/i,
+      /^send application$/i,
+      /^apply$/i
     ];
 
-    const hasApplyText = applyKeywords.some((kw) => text === kw || text.startsWith(kw) || text.includes(kw));
-    const hasApplyClass = className.includes('apply-button') ||
-      className.includes('jobs-apply-button') ||
-      className.includes('postings-btn') ||
-      className.includes('ia-applybutton') ||
-      className.includes('applybtn');
-    const hasApplyId = id.includes('submit_app') || id.includes('apply') || id.includes('btn-submit');
+    const isMatch = exactApplyPatterns.some((pattern) => pattern.test(text));
+    const hasStrictClass = className.includes('jobs-apply-button') || className.includes('postings-btn');
 
-    return hasApplyText || hasApplyClass || hasApplyId;
+    return isMatch || hasStrictClass;
   }
 
-  // Intercept click on any apply button
+  // Intercept click on real apply button and prompt user
   document.addEventListener(
     'click',
     (e) => {
-      if (isApplyElement(e.target)) {
-        console.log('[RoleFlow] Detected Apply button click!');
-        // Allow a 300ms breather for dynamic DOM elements to populate
+      if (isGenuineApplyButton(e.target)) {
         setTimeout(() => {
-          autoCaptureJob('Applied');
-        }, 300);
+          const jobData = extractCurrentPageJob();
+          if (jobData) {
+            promptTrackConfirmation(jobData);
+          }
+        }, 400);
       }
     },
     true
   );
 
-  // Intercept form submissions on Greenhouse, Lever, etc.
-  document.addEventListener(
-    'submit',
-    (e) => {
-      const form = e.target;
-      const formId = (form.id || '').toLowerCase();
-      const formAction = (form.action || '').toLowerCase();
-
-      if (formId.includes('application') || formId.includes('apply') || formAction.includes('apply') || formAction.includes('greenhouse') || formAction.includes('lever')) {
-        console.log('[RoleFlow] Detected Application Form Submission!');
-        autoCaptureJob('Applied');
-      }
-    },
-    true
-  );
-
-  /* ─── 6. Unobtrusive Floating Quick-Capture Badge ───────────────────────── */
+  /* ─── 7. Unobtrusive Floating Quick-Capture Badge ───────────────────────── */
   function injectFloatingQuickCapture() {
-    // Only inject on likely job pages
-    const isJobPage =
-      currentHost.includes('linkedin.com') ||
-      currentHost.includes('indeed.com') ||
-      currentHost.includes('naukri.com') ||
-      currentHost.includes('greenhouse.io') ||
-      currentHost.includes('lever.co') ||
-      document.querySelector('meta[property="og:type"][content="article"]') ||
-      document.querySelector('.job-description, #job-details, .job-details');
-
-    if (!isJobPage || document.getElementById('roleflow-floating-widget')) return;
+    // Only inject if this page is a genuine job posting with valid details
+    const jobData = extractCurrentPageJob();
+    if (!jobData || document.getElementById('roleflow-floating-widget')) return;
 
     const widget = document.createElement('div');
     widget.id = 'roleflow-floating-widget';
@@ -298,10 +378,10 @@
         bottom: 24px;
         right: 24px;
         z-index: 9999998;
-        background: #161616;
+        background: #18181b;
         color: #E2E8F0;
         border: 1px solid rgba(200, 149, 108, 0.4);
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55);
         border-radius: 24px;
         padding: 8px 14px;
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -316,7 +396,7 @@
       ">
         <span style="color: #c8956c; font-size: 10px;">●</span>
         <span>RoleFlow</span>
-        <span style="opacity: 0.4;">|</span>
+        <span style="opacity: 0.3;">|</span>
         <span style="color: #c8956c;">⚡ 1-Click Track</span>
       </div>
     `;
@@ -336,20 +416,19 @@
 
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
-        btn.innerHTML = '<span style="color: #c8956c;">Capturing...</span>';
-        autoCaptureJob('Applied');
+        btn.innerHTML = '<span style="color: #c8956c;">Tracking...</span>';
+        executeTrackJob(jobData, 'Applied');
       });
     }
   }
 
-  // Inject floating quick-track button once page is ready
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', injectFloatingQuickCapture);
+    document.addEventListener('DOMContentLoaded', () => setTimeout(injectFloatingQuickCapture, 1200));
   } else {
     setTimeout(injectFloatingQuickCapture, 1200);
   }
 
-  /* ─── 7. Listen for explicit messages from extension popup ──────────────── */
+  /* ─── 8. Listen for explicit messages from extension popup ──────────────── */
   chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.action === 'EXTRACT_JOB_DETAILS') {
       const jobData = extractCurrentPageJob();

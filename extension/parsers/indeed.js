@@ -2,15 +2,25 @@
  * Indeed Job Parser
  */
 function parseIndeedJob(document, locationHref) {
+  const jobUrl = locationHref || window.location.href;
+
+  // Strict check: Only parse on Indeed job view pages or active job detail cards
+  if (
+    !jobUrl.includes('/viewjob') &&
+    !jobUrl.includes('/rc/clk') &&
+    !document.querySelector('#jobDescriptionText, .jobsearch-JobInfoHeader-title')
+  ) {
+    return null;
+  }
+
   let jobTitle = '';
   let companyName = '';
   let location = '';
   let salary = '';
   let jobDescription = '';
-  const jobUrl = locationHref || window.location.href;
 
   const titleEl = document.querySelector(
-    '.jobsearch-JobInfoHeader-title, h1[data-testid="jobsearch-JobInfoHeader-title"], .jobsearch-JobComponent-title h1, h1'
+    '.jobsearch-JobInfoHeader-title, h1[data-testid="jobsearch-JobInfoHeader-title"], .jobsearch-JobComponent-title h1, [class*="JobInfoHeader-title"]'
   );
   if (titleEl) jobTitle = titleEl.innerText.trim();
 
@@ -34,18 +44,13 @@ function parseIndeedJob(document, locationHref) {
   );
   if (descEl) jobDescription = descEl.innerText.substring(0, 6000).trim();
 
-  if (!jobTitle || !companyName) {
-    const fallback = window.parseGenericJob ? window.parseGenericJob(document, locationHref) : {};
-    jobTitle = jobTitle || fallback.jobTitle;
-    companyName = companyName || fallback.companyName;
-    location = location || fallback.location;
-    salary = salary || fallback.salary;
-    jobDescription = jobDescription || fallback.jobDescription;
+  if (!jobTitle || !companyName || companyName.toLowerCase() === 'indeed') {
+    return null;
   }
 
   return {
-    jobTitle: jobTitle || 'Job Role',
-    companyName: companyName || 'Company',
+    jobTitle,
+    companyName,
     location: location || 'Remote',
     jobUrl,
     source: 'Indeed',

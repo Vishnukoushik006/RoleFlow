@@ -2,12 +2,21 @@
  * LinkedIn Job Parser
  */
 function parseLinkedInJob(document, locationHref) {
+  const jobUrl = locationHref || window.location.href;
+
+  // Strict check: Only parse if on LinkedIn jobs view or job details page
+  if (
+    !jobUrl.includes('/jobs/') &&
+    !document.querySelector('.jobs-details, .job-details-jobs-unified-top-card')
+  ) {
+    return null;
+  }
+
   let jobTitle = '';
   let companyName = '';
   let location = '';
   let salary = '';
   let jobDescription = '';
-  const jobUrl = locationHref || window.location.href;
 
   // Title Selectors
   const titleSelectors = [
@@ -72,18 +81,14 @@ function parseLinkedInJob(document, locationHref) {
     }
   }
 
-  // Fallback to generic if LinkedIn DOM altered
-  if (!jobTitle || !companyName) {
-    const fallback = window.parseGenericJob ? window.parseGenericJob(document, locationHref) : {};
-    jobTitle = jobTitle || fallback.jobTitle;
-    companyName = companyName || fallback.companyName;
-    location = location || fallback.location;
-    jobDescription = jobDescription || fallback.jobDescription;
+  // Must have a real job title and company
+  if (!jobTitle || !companyName || companyName.toLowerCase() === 'linkedin') {
+    return null;
   }
 
   return {
-    jobTitle: jobTitle || 'Job Role',
-    companyName: companyName || 'Company',
+    jobTitle,
+    companyName,
     location: location || 'Remote',
     jobUrl,
     source: 'LinkedIn',
