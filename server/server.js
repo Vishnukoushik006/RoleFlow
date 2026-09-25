@@ -35,7 +35,7 @@ app.use(helmet({
 const allowedOrigins = [
   'http://localhost:5173',
   'http://127.0.0.1:5173',
-  process.env.CLIENT_URL
+  process.env.CLIENT_URL?.replace(/\/$/, '')
 ].filter(Boolean);
 
 app.use(cors({
@@ -115,7 +115,7 @@ const PORT = process.env.PORT || 5001;
 
 if (require.main === module) {
   const server = app.listen(PORT, () => {
-    console.log(`[JobTrack Server] Running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
+    console.log(`[RoleFlow API] Running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
   });
 
   // Handle unhandled promise rejections gracefully
