@@ -65,8 +65,8 @@
   --border-subtle:    rgba(100, 85, 65, 0.06);
 
   --text-main:        #1C1714;
-  --text-secondary:   #5C4F44;
-  --text-muted:       #9C8E82;
+  --text-secondary:   #4F433A;
+  --text-muted:       #74675D;
 
   --shadow-sm: 0 1px 3px rgba(80, 60, 40, 0.08);
   --shadow-md: 0 4px 16px rgba(80, 60, 40, 0.10);
@@ -99,6 +99,14 @@ html * {
     color 0.3s ease,
     border-color 0.3s ease,
     box-shadow 0.3s ease !important;
+}
+
+/* The incoming theme is revealed from the theme button instead of fading the
+   entire page at once. The animation itself is created in ThemeContext. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
 }
 
 /* ─── Reset ─────────────────────────────────────────────────────────────── */
