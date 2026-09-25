@@ -1,22 +1,23 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 
 const ThemeContext = createContext(null);
 
-export const ThemeProvider = ({ children }) => {
-  const [theme, setTheme] = useState(() => localStorage.getItem('roleflow_theme') || 'dark');
+const applyTheme = (t) => {
+  document.documentElement.setAttribute('data-theme', t);
+  localStorage.setItem('roleflow_theme', t);
+};
 
-  useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('roleflow_theme', theme);
-  }, [theme]);
+export const ThemeProvider = ({ children }) => {
+  const [theme, setTheme] = useState(() => {
+    const saved = localStorage.getItem('roleflow_theme') || 'dark';
+    applyTheme(saved);
+    return saved;
+  });
 
   const toggleTheme = () => {
     const next = theme === 'dark' ? 'light' : 'dark';
-    if (!document.startViewTransition) {
-      setTheme(next);
-      return;
-    }
-    document.startViewTransition(() => setTheme(next));
+    applyTheme(next);
+    setTheme(next);
   };
 
   return (

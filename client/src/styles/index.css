@@ -85,20 +85,19 @@
   color: #0F172A;
 }
 
-/* ─── Theme transition — radial wipe from top-right ─────────────────────── */
-::view-transition-old(root),
-::view-transition-new(root) {
-  animation: none;
-  mix-blend-mode: normal;
+/* ─── Theme transition — smooth CSS variable interpolation ──────────────── */
+html {
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 
-::view-transition-new(root) {
-  animation: theme-wipe 0.55s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-  clip-path: circle(0% at 100% 0%);
-}
-
-@keyframes theme-wipe {
-  to { clip-path: circle(150% at 100% 0%); }
+html * {
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease !important;
 }
 
 /* ─── Reset ─────────────────────────────────────────────────────────────── */
@@ -197,7 +196,6 @@ button, input, select, textarea {
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   padding: 20px;
-  transition: border-color 0.15s ease;
 }
 
 .card:hover {
@@ -239,7 +237,6 @@ button, input, select, textarea {
   color: var(--text-main);
   font-size: 13.5px;
   outline: none;
-  transition: border-color 0.15s ease, background-color 0.15s ease;
 }
 
 .input-field:focus,
@@ -271,7 +268,7 @@ button, input, select, textarea {
   border-radius: var(--radius-sm);
   border: 1px solid transparent;
   cursor: pointer;
-  transition: background-color 0.14s ease, color 0.14s ease, border-color 0.14s ease, opacity 0.14s ease;
+  transition: opacity 0.14s ease;
   letter-spacing: -0.005em;
   white-space: nowrap;
 }
