@@ -6,6 +6,7 @@
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 Live Link - https://role-flow-five.vercel.app/
+---
 **JobTrack** is a modern full-stack SaaS ecosystem built with the **MERN stack** (MongoDB, Express.js, React.js, Node.js) and a **Manifest V3 Chrome Extension** designed to streamline, organize, and accelerate the job application process for job seekers, students, and software engineers.
 
 ---
